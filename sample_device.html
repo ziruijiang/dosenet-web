@@ -17,8 +17,31 @@
 
     <div id="daycounts" style="width:100%"></div>
     <script type="text/javascript"> 
+      function createCORSRequest(method, url){
+          var xhr = new XMLHttpRequest();
+          if ("withCredentials" in xhr){
+              xhr.open(method, url, true);
+          } else if (typeof XDomainRequest != "undefined"){
+              xhr = new XDomainRequest();
+              xhr.open(method, url);
+          } else {
+              xhr = null;
+          }
+          return xhr;
+      }
+
       var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/lbl.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+      // trying out CORS request to get data from non-origin server...
+      var request = creatCORSRequest("get",url);
+      if(request){
+        request.onload = function(){
+          var dataStr = new String(request.responseText);
+          process_csv(dataStr,dose,time);
+          plot_data(location,dose,time,div);
+        };
+        request.send();
+      }
       get_data(url,'LBL','USV','Day','daycounts');
     </script>
     <br>
