@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://radwatch.berkeley.edu/sites/default/files/dosenet/data_processing.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://radwatch.berkeley.edu/sites/default/files/dosenet/dosenet_style.css">
+</head>
+
+<body>
+
+    <div style="font-size:20px;">
+      This is a DoseNet radiation detection device continously monitoring radiation levels at this location. Check it out! 
+    </div>
+    <br><br>
+
+    <div id="daycounts" style="width:100%"></div>
+    <script type="text/javascript"> 
+      var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/lbl.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+      get_data(url,'LBL','USV','Day','daycounts');
+    </script>
+    <br>
+
+    &nbsp;
+
+    <div style="font-size:30px;">
+      <a href="https://radwatch.berkeley.edu/dosenet/map"> Check out our whole network!</a>
+    </div>
+</body>
+</html>
