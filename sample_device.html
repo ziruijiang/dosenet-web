@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="/home/pi/dosenet-web/data_processing.js"></script>
+  <script src="https://radwatch.berkeley.edu/sites/default/files/dosenet/data_processing.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
   <link rel="stylesheet" type="text/css" href="https://radwatch.berkeley.edu/sites/default/files/dosenet/dosenet_style.css">
 </head>
@@ -10,9 +10,10 @@
 <body>
 
     <div style="font-size:20px;">
-      This is a DoseNet radiation detection device continously monitoring radiation levels at this location. Check it out! 
+      This is a DoseNet radiation detection device continously monitoring radiation levels at this location.
     </div>
     <br><br>
+
 
     <div id="daycounts" style="width:100%"></div>
     <script type="text/javascript"> 
@@ -23,6 +24,11 @@
     <br>
 
     &nbsp;
+
+    <div style="font-size:20px;">
+      Check out the local <a href="http://192.168.1.1:9999/tree">Jupyter notebook</a> and play with the data directly!
+    </div>
+    <br><br>
 
     <div style="font-size:30px;">
       <a href="https://radwatch.berkeley.edu/dosenet/map"> Check out our whole network!</a>
