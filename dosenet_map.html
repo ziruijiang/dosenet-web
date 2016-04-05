@@ -12,7 +12,7 @@
 	<meta http-equiv="last-modified" content="2015-11-06 14:30 GMT" />
 	<meta name="copyright" content="© 2015 Navrit Bal, Tigran Ter-Stepanyan and Luke Sheard" />
 	<meta name="author" content="Navrit Bal, Tigran Ter-Stepanyan, Luke Sheard" />
-	<meta http-equiv="refresh" content="300;url=https://radwatch.berkeley.edu/dosenet/map">
+	<meta http-equiv="refresh" content="300;url=/dosenet/map">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSaBOz47zWi5eWz12SYzSl6GMSpl8l1c8&callback=initMap"></script>
 	<script type="text/javascript" 
@@ -21,7 +21,7 @@
 	<script type="text/javascript"
 		src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js">
 		</script>
-	<script src="https://radwatch.berkeley.edu/sites/default/files/dosenet/data_processing.js"></script>
+	<script src="/sites/default/files/dosenet/data_processing.js"></script>
 	<script type="text/javascript"
 		src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js">
 		</script>
@@ -347,7 +347,7 @@
 			"</div>" + 
 			"<div class = \"jp\">" +
 			"The DoseNet devices measure radiation counts to get counts per minute (CPM). However, CPM is not a useful measurement of radiation in our environment, because one count in a DoseNet device is different from one count in a Geiger counter, which is different from one count in a germanium detector, and so on. The counts in any detector have to be *calibrated* to represent a physical unit of dose rate, such as µSv/hr. The procedure used to calibrate our devices is described on the " +
-			"<a href=\"https://radwatch.berkeley.edu/dosenet/calibrations\">" + "Calibration Page" + "</a>";
+			"<a href=\"/dosenet/calibrations\">" + "Calibration Page" + "</a>";
 	}
     function units_used() {
         document.getElementById("text_field").innerHTML =
@@ -506,7 +506,7 @@
 	var marks = [];
 	var infowindow = new google.maps.InfoWindow();
 	// url for geoJSON file
-	var url = 'https://radwatch.berkeley.edu/sites/default/files/output.geojson?'
+	var url = '/sites/default/files/output.geojson?'
 		+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 	var json = $($.parseJSON(JSON.stringify($.getJSON(url))));
 	var parsed_json = '';
@@ -528,23 +528,23 @@
 		var url;
 		switch(name) {
 			case 'LBL':
-				url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/lbl.csv?'
+				url = '/sites/default/files/dosenet/lbl.csv?'
 				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 			break;
 			case 'Campolindo High School':
-				url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/campolindo.csv?'
+				url = '/sites/default/files/dosenet/campolindo.csv?'
 				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 			break;
 			case 'Pinewood High School':
-				url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/pinewood.csv?'
+				url = '/sites/default/files/dosenet/pinewood.csv?'
 				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 			break;
 			case 'Etcheverry Hall':
-				url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/etch.csv?'
+				url = '/sites/default/files/dosenet/etch.csv?'
 				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 			break;
 			case 'Etcheverry Hall Roof':
-				url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/etch_roof.csv?'
+				url = '/sites/default/files/dosenet/etch_roof.csv?'
 				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 			break;
 		}
@@ -579,13 +579,6 @@
 		url = getURL(val);
 		name = getName(val);
 
-		var plotly_url = "URL_" + dose + "_" + time;
-		var iframeIntro = "<iframe width=\"500\" height=\"400\" frameborder=\"0\" \
-			seamless=\"seamless\" scrolling=\"no\" src=\"";
-		var iframeEnding = ".embed?width=500&height=400\"></iframe>";
-		graph_url = val.properties[plotly_url.toString()];
-
-		//return iframeIntro + graph_url + iframeEnding;
 		var node_name = dose + '_' + time + '_' + name;
 		var content_string = '<div id="' + node_name + '"" style="width:500px; height=400px"></div>';
 		get_data(url.toString(),name.toString(),dose,time,node_name);
@@ -795,7 +788,7 @@
 	</div>
 
 	<div>
-		<a href="https://radwatch.berkeley.edu/dosenet/levels">
+		<a href="/dosenet/levels">
 			<img id="dosenet_rad_banner" alt="Relative Radiation Levels"  src="/sites/default/files/pictures/RadiationRatesGraphic.jpg"/>
 		</a>
 	</div>
@@ -842,7 +835,7 @@
 		<div id="map-canvas"></div>
 	</div>
 	<div class="center vcenteralign" style="padding:0.5em;">
-		<a href="https://radwatch.berkeley.edu/dosenet/map"
+		<a href="/dosenet/map"
 			alt="Redirect to secure (HTTPS) version">
 			Click here if you can't see any markers on the map</a>
 	</div>

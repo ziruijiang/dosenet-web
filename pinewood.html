@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="https://radwatch.berkeley.edu/sites/default/files/dosenet/data_processing.js"></script>
+  <script src="/sites/default/files/dosenet/data_processing.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://radwatch.berkeley.edu/sites/default/files/dosenet/dosenet_style.css">
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
 </head>
 
 <body>
@@ -15,14 +15,14 @@
     <div style="font-size:20px;">
       We had a great day visiting the students in Mrs. Abraham's AP Chemistry class and meeting several after to discuss ways they can get involved! Check out updates from our more recent visits! <br>
       <ul style="list-style-type: circle; list-style-position: inside;">
-        <li> <p><a href="https://radwatch.berkeley.edu/dosenet/schools/update1"> With help from serveral students, we got our device upgraded and running smoothly again!</a></p></li>
+        <li> <p><a href="/dosenet/schools/update1"> With help from serveral students, we got our device upgraded and running smoothly again!</a></p></li>
       </ul>
     </div>
     <br>
 
     <div id="daycountsdata" style="width:100%"></div>
     <script type="text/javascript"> 
-      var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/pinewood.csv?'
+      var url = '/sites/default/files/dosenet/pinewood.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
       get_data(url,'Pinewood','USV','Day','daycountsdata');
     </script>
@@ -91,7 +91,7 @@
     &nbsp;
 
     <div style="font-size:30px;">
-      <a href="https://radwatch.berkeley.edu/dosenet/map"> Check out the whole network!</a>
+      <a href="/dosenet/map"> Check out the whole network!</a>
     </div>
 </body>
 </html>

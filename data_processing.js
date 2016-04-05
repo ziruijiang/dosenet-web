@@ -1,4 +1,5 @@
 var data_input = [];
+var data_string_array = [];
 
 //var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/pinewood.csv?'
 //+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
@@ -33,69 +34,115 @@ function singleErrorPlotter(e) {
   ctx.restore();
 }
 
+function get_time_pars(time,end_date,start_date,nentries) {
+  var sample_size = 1;
+  switch(time) {
+    case 'Hour':
+      start_date = new Date(end_date.getTime() + -1*3600*1000);
+      nentries = Math.min(nentries,13); // 12 5 minute intervals in last hour
+      sample_size = 1; // don't compress
+    break;
+    case 'Day':
+      start_date = new Date(end_date.getTime() + -1*24*3600*1000);
+      nentries = Math.min(nentries,289); // 288 5 minute intervals in last day
+      sample_size = 6; // compress to twice per hour
+    break;
+    case 'Week':
+      start_date = new Date(end_date.getTime() + -7*24*3600*1000);
+      nentries = Math.min(nentries,2017); // 2016 in last week
+      sample_size = 12; // compress to one every hrs
+    break;
+    case 'Month':
+      start_date = new Date(end_date.getTime() + -30*24*3600*1000);
+      nentries = Math.min(nentries,8641); // 8640 in last month (30 days)
+      sample_size = 48; // compress to every 4 hrs
+    break;
+    case 'Year':
+      start_date = new Date(end_date.getTime() + -365*24*3600*1000);
+      nentries = Math.min(nentries,105121); // 105120 in last year
+      sample_size = 288;//1008; // compress to once a day
+    break;
+    case 'All':
+      //start_date = new Date(end_date.getTime() - start_date.getTime());
+      sample_size = 1; // don't compress;
+    break;
+  }
+  return [start_date,nentries,sample_size];
+}
+
+function get_calibration(dose) {
+  var scale = 1.0;
+  switch(dose) {
+    case 'CPM':
+      scale = 1.0;
+    break;
+    case 'USV':
+      scale = 0.036;
+    break;
+    case 'REM':
+      scale = 0.0036;
+    break;
+    case 'cigarette':
+      scale = 0.036*0.00833333335;
+    break;
+    case 'medical':
+      scale = 0.036*0.2;
+    break;
+    case 'plane':
+      scale = 0.036*0.420168067;
+    break;
+  }
+  return scale;
+}
+
+function set_time_array(start_date,end_date){
+  var time_array = [];
+  var this_date = new Date(start_date.getTime());
+  while( this_date.getTime() < end_date.getTime() ) {
+    time_array.push(this_date);
+    this_date = new Date(this_date.getTime() + 5*60*1000); // Add 5 minute increments from start
+  }
+  return time_array;
+}
+
+function findNearestDate(alist, date, delta) {
+  var first = 0;
+  var last = len(alist)-1;
+  var found = false;
+  var index = -1;
+
+  while( first<=last && !found ) {
+      var midpoint = (first + last)/2;
+      if( abs(alist[midpoint].getTime()-date.getTime()) < delta ) {
+        index = midpoint;
+        found = true;
+      }
+      else {
+        if( date.getTime() < alist[midpoint].getTime() )
+          last = midpoint-1;
+        else
+          first = midpoint+1;
+      }
+    }
+
+  return index;
+}
+
 function process_csv(text,dose,time) {
-  data_input = []; // Clear any old data out before filling!
   var raw_data = [];
   var lines = text.split("\n");
   var nentries = lines.length; // compare to full set possible for given time interval and keep smaller value
-  var sample_size = 1;
   var newest_data = lines[lines.length-2].split(",");
   var oldest_data = lines[1].split(",");
   var end_date = new Date(parseDate(newest_data[0]));
   var start_date = new Date(parseDate(oldest_data[0]));
-  switch(time) {
-	case 'Hour':
-	  end_date = new Date(end_date.getTime() + -1*3600*1000);
-	  nentries = Math.min(nentries,13); // 12 5 minute intervals in last hour
-    sample_size = 1; // don't compress
-	break;
-	case 'Day':
-	  end_date = new Date(end_date.getTime() + -1*24*3600*1000);
-	  nentries = Math.min(nentries,289); // 288 5 minute intervals in last day
-    sample_size = 6; // compress to twice per hour
-	break;
-	case 'Week':
-	  end_date = new Date(end_date.getTime() + -7*24*3600*1000);
-	  nentries = Math.min(nentries,2017); // 2016 in last week
-    sample_size = 12; // compress to one every hrs
-	break;
-	case 'Month':
-	  end_date = new Date(end_date.getTime() + -30*24*3600*1000);
-	  nentries = Math.min(nentries,8641); // 8640 in last month (30 days)
-    sample_size = 48; // compress to every 4 hrs
-	break;
-	case 'Year':
-	  end_date = new Date(end_date.getTime() + -365*24*3600*1000);
-	  nentries = Math.min(nentries,105121); // 105120 in last year
-    sample_size = 288;//1008; // compress to once a day
-	break;
-	case 'All':
-	  end_date = new Date(end_date.getTime() - start_date.getTime());
-    sample_size = 1; // don't compress;
-	break;
-  }
 
-  var scale = 1.0;
-  switch(dose) {
-	case 'CPM':
-	  scale = 1.0;
-	break;
-	case 'USV':
-	  scale = 0.036;
-	break;
-	case 'REM':
-	  scale = 0.0036;
-	break;
-	case 'cigarette':
-	  scale = 0.036*0.00833333335;
-	break;
-	case 'medical':
-	  scale = 0.036*0.2;
-	break;
-	case 'plane':
-	  scale = 0.036*0.420168067;
-	break;
-  }
+  var time_pars = get_time_pars(time,end_date,start_date,nentries);
+  start_date = time_pars[0];
+  nentries = time_pars[1];
+  var sample_size = time_pars[2];
+
+  var scale = get_calibration(dose);
 
   for( var i = lines.length - nentries; i < lines.length; ++i ) {
     if( i < 1 ) { continue; } // skip first line(s) with meta-data
@@ -103,13 +150,13 @@ function process_csv(text,dose,time) {
     if(line.length>3) {
       var data = line.split(",");
       var x = new Date(parseDate(data[0]));
-      if( x.getTime() < end_date.getTime() ) { continue; }
+      if( x.getTime() < start_date.getTime() ) { continue; }
       var y = parseFloat(data[1]);
       raw_data.push([x,y]);
     }
   }
 
-  data_input = average_data(raw_data,sample_size,scale);
+  return average_data(raw_data,sample_size,scale);
 }
 
 function average_data(raw_data,sample_size,scale)
@@ -118,7 +165,6 @@ function average_data(raw_data,sample_size,scale)
   for(n=0; n < Math.floor(raw_data.length/sample_size); n++){
     sub_data = raw_data.slice(n*sample_size,(n+1)*sample_size);
     var average = 0;
-    console.log(sub_data.length);
     for(i=0;i<sub_data.length;i++)
     {
       var this_data = sub_data[i];
@@ -127,7 +173,6 @@ function average_data(raw_data,sample_size,scale)
     error = Math.sqrt(average)/sub_data.length/5;
     average = average/sub_data.length/5;
     var d = Math.floor(sub_data.length/2);
-    console.log(d);
     var mid_data = sub_data[d];
     var date = mid_data[0];
     averaged_data.push([date,[average*scale,error*scale]]);
@@ -135,41 +180,53 @@ function average_data(raw_data,sample_size,scale)
   return averaged_data;
 }
 
+function process_all_data(data_array,dose,time) {
+  var all_data = [];
+  var combined_data = [];
+  for (index = 0; index < data_array.length; index++) {
+    this_data = process_csv(data_array[index],dose,time);
+
+  }
+  for (index = 0; index < all_data[0].length; index++) {
+    combined_data.push(all_data[0])
+  }
+}
+
 function plot_data(location,dose,time,div) {
   var title_text = location;
   var y_text = '&microSv/hr';
   var data_label = '&microSv/hr';
   switch(dose) {
-	case 'CPM':
-	  title_text = title_text + ' in CPM ';
-	  y_text = 'CPM';
-	  data_label = "CPM";
-	break;
-	case 'USV':
-	  title_text = title_text + ' in &microSv/hr ';
-	  y_text = '&microSv/hr';
-	  data_label = "µSv/hr";
-	break;
-	case 'REM':
-	  title_text = title_text + ' in mrem/hr ';
-	  y_text = 'mrem/hr';
-	  data_label = "mrem/hr";
-	break;
-	case 'cigarette':
-	  title_text = title_text + ' in cigarettes/hr ';
-	  y_text = 'cigarettes/hr';
-	  data_label = "cigarettes/hr";
-	break;
-	case 'medical':
-	  title_text = title_text + ' in xRays/hr ';
-	  y_text = 'xRays/hr';
-	  data_label = "xRays/hr";
-	break;
-	case 'plane':
-	  title_text = title_text + ' in airplane travel per hour ';
-	  y_text = 'air-travel/hr';
-	  data_label = "air-travel/hr";
-	break;
+  	case 'CPM':
+  	  title_text = title_text + ' in CPM ';
+  	  y_text = 'CPM';
+  	  data_label = "CPM";
+  	break;
+  	case 'USV':
+  	  title_text = title_text + ' in &microSv/hr ';
+  	  y_text = '&microSv/hr';
+  	  data_label = "µSv/hr";
+  	break;
+  	case 'REM':
+  	  title_text = title_text + ' in mrem/hr ';
+  	  y_text = 'mrem/hr';
+  	  data_label = "mrem/hr";
+  	break;
+  	case 'cigarette':
+  	  title_text = title_text + ' in cigarettes/hr ';
+  	  y_text = 'cigarettes/hr';
+  	  data_label = "cigarettes/hr";
+  	break;
+  	case 'medical':
+  	  title_text = title_text + ' in xRays/hr ';
+  	  y_text = 'xRays/hr';
+  	  data_label = "xRays/hr";
+  	break;
+  	case 'plane':
+  	  title_text = title_text + ' in airplane travel per hour ';
+  	  y_text = 'air-travel/hr';
+  	  data_label = "air-travel/hr";
+  	break;
   }
 
   switch(time) {
@@ -227,8 +284,19 @@ function plot_data(location,dose,time,div) {
 
 function get_data(url,location,dose,time,div) {
   $.get(url, function (data) {
-      var dataStr = new String(data);
-      process_csv(dataStr,dose,time);
+      data_input = []; // Clear any old data out before filling!
+      //var dataStr = new String(data);
+      //var dataStr = data;
+      data_input = process_csv(data,dose,time);
       plot_data(location,dose,time,div);
   },dataType='text');
+}
+
+function get_all_data(url_array,location,dose,time,div) {
+  for (index = 0; index < url_array.length; index++) {
+    $.get(url_array[index], data_string_array.push(data), dataType='text');
+  }
+  data_input = []; // Clear any old data out before filling!
+  process_all_data(data_string_array,dose,time);
+  plot_data(location,dose,time,div);
 }
