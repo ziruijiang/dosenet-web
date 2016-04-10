@@ -497,10 +497,12 @@
 		}
 	}
 </script>
+
 <script>
 	var map; // Google Map Object
 	var berkeley = [37.872269, -122.258901];
 	var markers = [];
+	var bounds = new google.maps.LatLngBounds();
 	var json_vals = [];
 	var markerCluster;
 	var marks = [];
@@ -516,6 +518,7 @@
 	var graph_url = '';
 	var selected_marker = '';
 	var selected_val = '';
+	var unitMap = new Map();
 
 	function centerMap(center){
 		var mapCenter = new google.maps.LatLng(center[0], center[1]);
@@ -524,53 +527,16 @@
 
 	// These two functions should be temporary until this can be done in makeGeoJSON as we phase out plot.ly
 	function getURL(val){
-		var name = val.properties["Name"];
+		var csv = val.properties["CSV_LOCATION"];
 		var url;
-		switch(name) {
-			case 'LBL':
-				url = '/sites/default/files/dosenet/lbl.csv?'
-				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-			break;
-			case 'Campolindo High School':
-				url = '/sites/default/files/dosenet/campolindo.csv?'
-				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-			break;
-			case 'Pinewood High School':
-				url = '/sites/default/files/dosenet/pinewood.csv?'
-				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-			break;
-			case 'Etcheverry Hall':
-				url = '/sites/default/files/dosenet/etch.csv?'
-				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-			break;
-			case 'Etcheverry Hall Roof':
-				url = '/sites/default/files/dosenet/etch_roof.csv?'
-				  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-			break;
-		}
+		url = '/sites/default/files/dosenet/' + csv + '?'
+		  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 		return url;
 	}
+
 	function getName(val){
 		var name = val.properties["Name"];
-		var short_name = 'NONAME';
-		switch(name) {
-			case 'LBL':
-				short_name = 'LBL';
-			break;
-			case 'Campolindo High School':
-				short_name = 'Campolindo';
-			break;
-			case 'Pinewood High School':
-				short_name = 'Pinewood';
-			break;
-			case 'Etcheverry Hall':
-				short_name = 'Etcheverry Hall';
-			break;
-			case 'Etcheverry Hall Roof':
-				short_name = 'Etcheverry Roof';
-			break;			
-		}
-		return short_name;
+		return name;
 	}
 
 	function updateInfowindowContent(val){
@@ -681,36 +647,18 @@
 		}
 	}
 
+	function SetUnitMap(){
+		unitMap.set("CPM",["CPM",1.0,1]);
+		unitMap.set("mrem/hr",["mREM/hr",1.0,4]);
+		unitMap.set("&microSv/hr",["&microSv/hr",1.0,3]);
+		unitMap.set("air travel/hr",["&microSv/hr",0.420168067,4]);
+		unitMap.set("cigarettes/hr",["&microSv/hr",0.00833333335,4]);
+		unitMap.set("X-rays/hr",["&microSv/hr",0.2,4]);
+	}
+
 	function getLabelContent(val){
 		selected_unit = getDoseUnit();
-		switch(selected_unit) {
-			case 'CPM':
-				latest_val = (val.properties["CPM"]).toFixed(1);
-				break;
-			case 'REM':
-				selected_unit = 'mrem/hr'
-				latest_val = (val.properties["mREM/hr"]).toFixed(4);
-				break;
-			case 'USV':
-				selected_unit = '&microSv/hr'
-				latest_val = (val.properties["&microSv/hr"]).toFixed(3);
-				break;
-			case 'plane':
-				selected_unit = 'plane travel/hr'
-				latest_val = (val.properties["&microSv/hr"]*0.420168067).toFixed(4);
-				break;
-			case 'cigarette':
-				selected_unit = 'cigarettes/hr'
-				latest_val = (val.properties["&microSv/hr"]*0.00833333335).toFixed(4);
-				break;
-			case 'medical':
-				selected_unit = 'X-Rays/hr'
-				latest_val = (val.properties["&microSv/hr"]*0.2).toFixed(4);
-				break;
-			default:
-				latest_val = (val.properties["&microSv/hr"]).toFixed(3);
-				break;
-		}
+		latest_val = (val.properties[unitMap.get(selected_unit)[0]]*unitMap.get(selected_unit)[1]).toFixed(unitMap.get(selected_unit)[2]);
 		return ("&nbsp" + latest_val + "&nbsp" + selected_unit + "&nbsp");
 	}
 
@@ -749,6 +697,7 @@
 		var marker;
 		initMap();
 		centerMap(berkeley); //Because we're self-centered.
+		SetUnitMap();
 
 		// Fetch geoJSON file - runs function on complete, 'data' is extracted from JSON
 		$.getJSON(url, function(data){
@@ -774,6 +723,10 @@
 			    setMarkerIcon(marker);
 				addMarkerEventListeners(val, marker);
 		    });
+			for (var i = 0; i < markers.length; i++) {
+			 bounds.extend(markers[i].getPosition());
+			}
+			map.fitBounds(bounds);
 			addTimeDropdownListener();
 			addUnitDropdownListener();
 			var mcOptions = {gridSize: 40, maxZoom: 15};
@@ -801,12 +754,12 @@
 						Units to Display on Plots
 					</div>
 					<select id="dose_dropdown" class="dropdown" onChange='changeDoseUnits()'>
-						<option value="USV"> µSv/hr </option>
-						<option value="REM"> mrem/hr </option>
+						<option value="&microSv/hr"> µSv/hr </option>
+						<option value="mrem/hr"> mrem/hr </option>
 						<option value="CPM"> CPM </option>
-						<option value="plane"> air travel/hr </option>
-						<option value="medical"> X-rays/hr </option>
-						<option value="cigarette"> cigarettes/hr </option>
+						<option value="air travel/hr"> air travel/hr </option>
+						<option value="X-rays/hr"> X-rays/hr </option>
+						<option value="cigarettes/hr"> cigarettes/hr </option>
 					</select>
 				</td>
 				<td>
