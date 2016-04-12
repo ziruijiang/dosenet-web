@@ -13,6 +13,20 @@
   border-style: solid;
 }
 
+#graph_div {
+  position:absolute;
+  left: 20px;
+  right: 20px;
+  top: 20px;
+  bottom: 20px;
+}
+
+#graph_wrapper_div {
+ position:relative;
+ height:300px;
+ width:80%;
+}
+
 div.description_block {
   width:100%;
   /* styling below */
