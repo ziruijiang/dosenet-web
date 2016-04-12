@@ -527,7 +527,7 @@
 
 	// These two functions should be temporary until this can be done in makeGeoJSON as we phase out plot.ly
 	function getURL(val){
-		var csv = val.properties["CSV_LOCATION"];
+		var csv = val.properties["csv_location"];
 		var url;
 		url = '/sites/default/files/dosenet/' + csv + '?'
 		  + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
@@ -539,15 +539,21 @@
 		return name;
 	}
 
+	function getTZ(val){
+		var tz = val.properties["timezone"];
+		return tz;
+	}
+
 	function updateInfowindowContent(val){
 		time = getTimeframe();
 		dose = getDoseUnit();
 		url = getURL(val);
 		name = getName(val);
+		timezone = getTZ(val);
 
 		var node_name = dose + '_' + time + '_' + name;
 		var content_string = '<div id="' + node_name + '"" style="width:500px; height=400px"></div>';
-		get_data(url.toString(),name.toString(),dose,time,node_name);
+		get_data(url.toString(),name.toString(),timezone,dose,time,node_name);
 		return content_string;
 	}
 
@@ -735,6 +741,7 @@
 	});
 	</script>
 </head>
+
 <body>
 	<div id=my_banner>
 	    This map shows background radiation measured throughout our network of small sensors maintained and operated by students around the Bay Area and the UC Berkeley team.

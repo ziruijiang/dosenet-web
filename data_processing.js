@@ -215,7 +215,6 @@ function process_all_data(csv_map,dose,time) {
   length = csv_map.size;
 
   csv_map.forEach( function(csv, location, csv_map ) {
-    //console.log('processing data for '+location+' with data length = '+csv.length);
     var this_data = process_csv(csv,dose,time);
     start_date_range.push(this_data[0][0]);
     end_date_range.push(this_data[this_data.length-1][0]);
@@ -239,11 +238,12 @@ function process_all_data(csv_map,dose,time) {
   return data_input;
 }
 
-function plot_data(location,data_input,dose,data_labels,time,div) {
+function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
   var title_text = location;
   var y_text = dose;
   // add x-label to beginning of data label array
-  data_labels.unshift("Time (local)");
+  data_labels.unshift(timezone);
+  console.log(data_labels);
   if( time=="All" ) { title_text = 'All data for ' + title_text; }
 
   g = new Dygraph(
@@ -258,7 +258,7 @@ function plot_data(location,data_input,dose,data_labels,time,div) {
       showRangeSelector: true,
       sigFigs: 3,
       ylabel: y_text,
-      xlabel: 'Time (local)',
+      xlabel: data_labels[0],
       labels: data_labels,
       strokeWidth: 0.0,
       highlightCircleSize: 5,
@@ -310,17 +310,17 @@ function get_all_data(url_array,locations,dose,time,div) {
     var return_locations = get_key_array(data_string_map);
     var data_input = [];
     data_input = process_all_data(data_string_map,dose,time);
-    plot_data("All locations",data_input,dose,return_locations,time,div);
+    plot_data("All locations",data_input,dose,"Time (local)",return_locations,time,div);
   });
 }
 
-function get_data(url,location,dose,time,div) {
+function get_data(url,location,timezone,dose,time,div) {
   $.get(url, function (data) {
       var data_input = []; // Clear any old data out before filling!
       data_input = process_csv(data,dose,time);
       var data_label = [];
       if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
       else data_label.push(dose);
-      plot_data(location,data_input,dose,data_label,time,div);
+      plot_data(location,data_input,dose,timezone,data_label,time,div);
   },dataType='text');
 }
