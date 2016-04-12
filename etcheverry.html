@@ -17,18 +17,17 @@
     </div>
     <br>
 
-    <div id="daycountshall" style="width:100%"></div>
+    <div id="daycounts" style="width:100%"></div>
     <script type="text/javascript"> 
+      url_array = [];
       var url = '/sites/default/files/dosenet/etch.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-      get_data(url,'Etcheverry Hall','&microSv/hr','Day','daycountshall');
-    </script>
-    <br>
-    <div id="daycountsroof" style="width:100%"></div>
-    <script type="text/javascript"> 
-      var url = '/sites/default/files/dosenet/etch_roof.csv?'
-        + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-      get_data(url,'Etcheverry Hall Roof','USV','Day','daycountsroof');
+      url_array.push(url);
+      url = '/sites/default/files/dosenet/etch_roof.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, '');
+      url_array.push(url);
+      var location_array = ['Etcheverry','Etch. Roof'];
+      get_all_data(url_array,location_array,'&microSv/hr','Day','daycounts');
     </script>
 
     &nbsp;
