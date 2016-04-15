@@ -242,7 +242,8 @@ function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
   var title_text = location;
   var y_text = dose;
   // add x-label to beginning of data label array
-  data_labels.unshift(timezone);
+  time_label = 'Time ('+timezone+')';
+  data_labels.unshift(time_label);
   console.log(data_labels);
   if( time=="All" ) { title_text = 'All data for ' + title_text; }
 
@@ -314,10 +315,18 @@ function get_all_data(url_array,locations,dose,time,div) {
   });
 }
 
+function shift_time(data_input,diff) {
+  for( var i=0; i<data_input.length; i++ ) {
+    data_input[i][0] = new Date(data_input[i][0].getTime() + diff*60000);
+  }
+}
+
 function get_data(url,location,timezone,dose,time,div) {
   $.get(url, function (data) {
       var data_input = []; // Clear any old data out before filling!
       data_input = process_csv(data,dose,time);
+      // shift date by 12hrs (argument to function is minutes)
+      if( timezone=="Asia/Tokyo" ) shift_time(data_input,16*60);
       var data_label = [];
       if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
       else data_label.push(dose);
