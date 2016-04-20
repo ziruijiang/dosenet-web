@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="/sites/default/files/dosenet/data_processing.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+</head>
+
+<body>
+    <div id="my_banner">
+        DoseNet has become an international network, with our 6th device now posting data from Koriyama City, Japan!
+    </div>
+    <br>
+    <div style="font-size:20px;">
+      During the <a href="http://irc.symposium.lbnl.org/2016/">2nd International Symposium for Resilient Communities</a> two members of our DoseNet team installed a device at City Hall in Koriyama City, Japan. We are thrilled to have Koriyama city as part of our network and we're looking forward to building on this new connection.
+    </div>
+    <br>
+
+    <div id="graph_wrapper_div"><div id="graph_div"></div></div>
+    <script type="text/javascript"> 
+      var url = '/sites/default/files/dosenet/koriyama_ch.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+      get_data(url,'Koriyama City','Asia/Tokyo','&microSv/hr','Day','graph_div');
+    </script>
+
+    &nbsp;
+
+    <table class="center "style="float: middle;">
+      <tr>
+        <td style="border: 1px solid transparent; width: 49.9275%; vertical-align: top;">
+          <div>
+            <a rel="image" href="/sites/default/files/pictures/Koriyama_device.jpg"><img class="autoResizeImage" src="/sites/default/files/pictures/Koriyama_device.jpg"/></a>
+          </div>
+        </td>
+        <td style="border: 1px solid transparent; width: 50.0725%; vertical-align: top;">
+          <div>
+            <a rel="image" href="/sites/default/files/pictures/Koriyama_device_wide.jpg"><img class="autoResizeImage" src="/sites/default/files/pictures/Koriyama_device_wide.jpg"/></a>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <table class="center "style="float: middle;">
+      <tr>
+        <td style="width: 100%;">
+          <div class="description_block">
+          <center>
+            <p class="description_content_block">Fig 1. Our newest Berkeley DoseNet device now taking data at our new location at City Hall in Koriyama City, Japan.</p>
+          </center>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    &nbsp;
+
+    <table class="center " style="float: middle;">
+      <tr>
+        <td>
+            <a rel="image" href="/sites/default/files/pictures/Koriyama_installation_group.jpg"><img style="width:100%;" src="/sites/default/files/pictures/Koriyama_installation_group.jpg"/></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="description_block">
+          <center>
+            <p class="description_content_block">Fig 2. Jinney Kil and Radley Rigonan with several Symposium attendees and Koriyama City officials during the installation of our DoseNet device at City Hall.</p>
+          </center>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    &nbsp;
+
+    <div style="font-size:30px;">
+      <a href="/dosenet/map"> Check out the whole network!</a>
+    </div>
+</body>
+</html>
