@@ -311,7 +311,7 @@ function get_all_data(url_array,locations,dose,time,div) {
     var return_locations = get_key_array(data_string_map);
     var data_input = [];
     data_input = process_all_data(data_string_map,dose,time);
-    plot_data("All locations",data_input,dose,"Time (local)",return_locations,time,div);
+    plot_data("All locations",data_input,dose,"America/Los_Angeles",return_locations,time,div);
   });
 }
 
