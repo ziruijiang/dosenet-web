@@ -14,23 +14,28 @@
     </div>
     <br><br>
 
+    <div style="font-size:20px;">
+      Check out the local <a href="http://192.168.5.1:9999/tree">Jupyter notebook</a> and play with the data directly!
+    </div>
+    <br><br>
 
     <div id="daycounts" style="width:100%"></div>
     <script type="text/javascript">
 
+/*
       function createCORSRequest(method, url){
         var invocation = new XMLHttpRequest();
 
         function callOtherDomain() {
           if(invocation) {    
-            invocation.open('GET', url, true);
+            invocation.open(method, url, true);
             invocation.onreadystatechange = handler;
             invocation.send(); 
           }
         }
         return invocation;
       }
-/*
+*/
       function createCORSRequest(method, url){
           var xhr = new XMLHttpRequest();
           if ("withCredentials" in xhr){
@@ -43,7 +48,6 @@
           }
           return xhr;
       }
-*/
       var url = 'http://radwatch.berkeley.edu/sites/default/files/dosenet/lbl.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
       // trying out CORS request to get data from non-origin server...
