@@ -13,11 +13,11 @@
     </div>
     <br>
     <div style="font-size:20px;">
-      Our highly sensitive air monitor data tells us that there are significant variations in radiation levels due to changes in weather. To see these with our dosimeter devices, we of course need to have devices installed outdoors. However, the relatively low sensitivity of our dosimeters may make them insensitive to such variations. To find out if these devices are sensitive enough to see significant weather related variations, we have installed two devices at Etcheverry Hall at UC Berkeley, one inside the building, and one on the roof next to our air monitor.
+      Our highly sensitive air monitor data tells us that there are significant variations in radiation levels due to changes in weather. To see these effects with our dosimeter devices, we need devices installed outdoors. However, the relatively low sensitivity of our dosimeters may make them insensitive to such variations. To find out if these devices are sensitive enough to see significant weather-related variations, we have installed two devices at Etcheverry Hall at UC Berkeley: one inside the building and one on the roof next to our air monitor.
     </div>
     <br>
 
-    <div id="daycounts" style="width:100%"></div>
+    <div id="graph_wrapper_div"><div id="graph_div"></div></div>
     <script type="text/javascript"> 
       url_array = [];
       var url = '/sites/default/files/dosenet/etch.csv?'
@@ -27,7 +27,7 @@
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
       url_array.push(url);
       var location_array = ['Etcheverry','Etch. Roof'];
-      get_all_data(url_array,location_array,'&microSv/hr','Day','daycounts');
+      get_all_data(url_array,location_array,'&microSv/hr','Day','graph_div');
     </script>
 
     &nbsp;
