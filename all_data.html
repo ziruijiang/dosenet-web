@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/sites/default/files/dosenet/data_processing.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+</head>
+
+<body>
+<div style="font-size:20px">
+Check out all data together!
+</div>
+<br>
+<div id="alldata" style="width:100%"></div>
+<br><br>
+<table id="legend" style="width:100%; border:15px"></table>
+
+<script type="text/javascript"> 
+	var url = '/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+	location_array = [];
+	url_array = [];
+	div_id_array = [];
+	var table_index = 0;
+	var table = document.getElementById("legend");
+
+	$(document).ready(function(){
+		// Fetch geoJSON file - runs function on complete, 'data' is extracted from JSON
+		$.getJSON(url, function(data){
+			// For each item in "features" array inside data runs function
+			// key: position of item in the array Features
+			// val: value of item
+			done = $.each(data.features, function(key, val){
+				location_array.push(val.properties["Name"]);
+				var csv = val.properties["csv_location"];
+				var csv_url = '/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+				url_array.push(csv_url);
+				//create div for each data-set for static labeling
+				if( table_index%3 === 0 ) row = table.insertRow(table_index/3);
+				cell = row.insertCell(table_index%3);
+				cell.innerHTML = '<div id="'+val.properties["Name"]+'">'+val.properties["Name"]+'</div>';
+				//var div = document.createElement('div');
+				//div.id = val.properties["Name"];
+				//div.textContent = val.properties["Name"];
+				//var parent = document.getElementById("legend");
+				//parent.appendChild(div);
+				table_index += 1;
+		    });
+		    $.when.apply($, done).then( function() {
+				get_all_data(url_array,location_array,'CPM','Month','alldata');
+		    });
+		});
+	});
+</script>
+<br><br>
+</body>
+</html>
+

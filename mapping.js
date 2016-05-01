@@ -44,11 +44,11 @@ function getTZ(val){
 }
 
 function updateInfowindowContent(val){
-	time = getTimeframe();
-	dose = getDoseUnit();
-	url = getURL(val);
-	name = getName(val);
-	timezone = getTZ(val);
+	var time = getTimeframe();
+	var dose = getDoseUnit();
+	var url = getURL(val);
+	var name = getName(val);
+	var timezone = getTZ(val);
 
 	var node_name = dose + '_' + time + '_' + name;
 	//var content_string = '<div id="' + node_name + '"" style="max-width:500px; max-height=400px"><div id="graph_div"></div></div>';
@@ -198,44 +198,3 @@ function addUnitDropdownListener(){
 		infowindow.open(map, selected_marker);
 	});
 }
-
-$(document).ready(function(){
-	var marker;
-	initMap();
-	centerMap(berkeley); //Because we're self-centered.
-	SetUnitMap();
-
-	// Fetch geoJSON file - runs function on complete, 'data' is extracted from JSON
-	$.getJSON(url, function(data){
-		parsed_json = data;
-		// For each item in "features" array inside data runs function
-		// key: position of item in the array Features
-		// val: value of item
-		$.each(data.features, function(key, val){
-			$("#dosimeter_list").append($("<option />").text(val.properties["Name"]));
-			var lon = getCoords(val).lon;
-			var lat = getCoords(val).lat;
-	        var marker = new MarkerWithLabel({
-	            map: map,
-	            title: name,
-	            position: new google.maps.LatLng(lat, lon),
-	            labelContent: getLabelContent(val),
-	            labelAnchor: new google.maps.Point(20, 0),
-	            labelClass: "labels",
-							animation: google.maps.Animation.DROP
-	        });
-			markers.push(marker);
-	        json_vals.push(val);
-		    setMarkerIcon(marker);
-			addMarkerEventListeners(val, marker);
-	    });
-		for (var i = 0; i < markers.length; i++) {
-		 bounds.extend(markers[i].getPosition());
-		}
-		map.fitBounds(bounds);
-		addTimeDropdownListener();
-		addUnitDropdownListener();
-		var mcOptions = {gridSize: 40, maxZoom: 15};
-		markerCluster = new MarkerClusterer(map, markers, mcOptions);
-	});
-});
