@@ -22,12 +22,58 @@
 	<script type="text/javascript"
 		src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js">
 		</script>
-	<script src="/sites/default/files/dosenet/data_processing.js"></script>
+	<script src="../data_processing.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_map_style.css">
+	<link rel="stylesheet" type="text/css" href="../dosenet_map_style.css">
 
-	<script src="/sites/default/files/dosenet/mapping.js"></script>
-	<script type="text/javascript" src="/sites/default/files/dosenet/dosenet_text.js"></script>
+	<script src="../mapping.js"></script>
+	<script type="text/javascript" src="../dosenet_text.js"></script>
+	<script>
+		// url for geoJSON file
+		var url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/output.geojson?'
+			+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+		$(document).ready(function(){
+			var marker;
+			initMap();
+			centerMap(berkeley); //Because we're self-centered.
+			SetUnitMap();
+
+			console.log('getting station info from json file:'+url);
+			// Fetch geoJSON file - runs function on complete, 'data' is extracted from JSON
+			$.getJSON(url, function(data){
+				parsed_json = data;
+				// For each item in "features" array inside data runs function
+				// key: position of item in the array Features
+				// val: value of item
+				$.each(data.features, function(key, val){
+					$("#dosimeter_list").append($("<option />").text(val.properties["Name"]));
+					var lon = getCoords(val).lon;
+					var lat = getCoords(val).lat;
+			        var marker = new MarkerWithLabel({
+			            map: map,
+			            title: name,
+			            position: new google.maps.LatLng(lat, lon),
+			            labelContent: getLabelContent(val),
+			            labelAnchor: new google.maps.Point(20, 0),
+			            labelClass: "labels",
+									animation: google.maps.Animation.DROP
+			        });
+					markers.push(marker);
+			        json_vals.push(val);
+				    setMarkerIcon(marker);
+					addMarkerEventListeners(val, marker);
+			    });
+				for (var i = 0; i < markers.length; i++) {
+				 bounds.extend(markers[i].getPosition());
+				}
+				map.fitBounds(bounds);
+				addTimeDropdownListener();
+				addUnitDropdownListener();
+				var mcOptions = {gridSize: 40, maxZoom: 15};
+				markerCluster = new MarkerClusterer(map, markers, mcOptions);
+			});
+		});
+	</script>
 </head>
 
 <body>

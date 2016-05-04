@@ -3,7 +3,7 @@
 <head>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="data_processing.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
   <link rel="stylesheet" type="text/css" href="dosenet_style.css">
 </head>
 
@@ -19,23 +19,9 @@
     </div>
     <br><br>
 
-    <div id="daycounts" style="width:100%"></div>
+    <div id="daycounts" style="position: middle; width:75%"></div>
     <script type="text/javascript">
 
-/*
-      function createCORSRequest(method, url){
-        var invocation = new XMLHttpRequest();
-
-        function callOtherDomain() {
-          if(invocation) {    
-            invocation.open(method, url, true);
-            invocation.onreadystatechange = handler;
-            invocation.send(); 
-          }
-        }
-        return invocation;
-      }
-*/
       function createCORSRequest(method, url){
           var xhr = new XMLHttpRequest();
           if ("withCredentials" in xhr){
@@ -48,21 +34,22 @@
           }
           return xhr;
       }
-      var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/lbl.csv?'
+      var url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/dosenet/lbl.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+
       // trying out CORS request to get data from non-origin server...
-
+      /*
       var request = createCORSRequest("GET",url);
-
       if(request){
         request.onload = function(){
           var dataStr = new String(request.responseText);
           process_csv(dataStr,'&microSv/hr','Day');
-          plot_data('LBL','USV','Day','daycounts');
+          plot_data('LBL','&microSv/hr','Day','daycounts');
         };
         request.send();
       }
-      //get_data(url,'LBL','USV','Day','daycounts');
+      */
+      get_data(url,'This location','Local','&microSv/hr','Day','daycounts');
     </script>
     <br>
 
