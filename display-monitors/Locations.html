@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="refresh" content="30;url=FindMore.html">
+	<meta http-equiv="refresh" content="45;url=FindMore.html">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="../data_processing.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 	<link rel="stylesheet" type="text/css" href="../dosenet_style.css">
+	<style>
+	div.data {
+		width: 100%;
+	}
+	#legend {
+		align: center;
+		width: 75%;
+		border: 15px;
+	}
+	td {
+    	padding-left: 75px;
+	    text-align: left;
+	}
+	h2 {
+		text-align: center;
+		font-size: 150%;
+	}
+	</style>
 </head>
 
 <body>
-<div style="font-size:20px">
-Check out all data together!
-</div>
-<br>
-<div id="alldata" style="width:100%"></div>
+<h2> <a href="http://radwatch.berkeley.edu/" target="_blank"> radwatch.berkeley.edu </a> </h2>
+
+<div id="alldata" align="center" style="width:75%; margin: 0 auto"></div>
 <br><br>
-<table id="legend" style="position: middle; width:75%; height:50%; border:15px"></table>
+<table id="legend" align="center" style="width: 75%;" ></table>
 
 <script type="text/javascript"> 
 	var url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
@@ -48,7 +64,7 @@ Check out all data together!
 				table_index += 1;
 		    });
 		    $.when.apply($, done).then( function() {
-				get_all_data(url_array,location_array,'CPM','Month','alldata');
+				get_all_data(url_array,location_array,'&microSv/hr','Month','alldata');
 		    });
 		});
 	});
