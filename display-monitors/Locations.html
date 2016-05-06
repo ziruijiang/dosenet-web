@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
 	<meta http-equiv="refresh" content="60;url=FindMore.html">
+=======
+	<meta http-equiv="refresh" content="30;url=FindMore.html">
+>>>>>>> refs/remotes/bearing/master
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<script src="/sites/default/files/dosenet/data_processing.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+	<script src="../data_processing.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+	<link rel="stylesheet" type="text/css" href="../dosenet_style.css">
 </head>
 
 <body>
@@ -16,10 +20,10 @@ Check out all data together!
 <br>
 <div id="alldata" style="width:100%"></div>
 <br><br>
-<table id="legend" style="width:100%; border:15px"></table>
+<table id="legend" style="position: middle; width:75%; height:50%; border:15px"></table>
 
 <script type="text/javascript"> 
-	var url = '/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+	var url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
 	location_array = [];
 	url_array = [];
 	div_id_array = [];
@@ -34,7 +38,7 @@ Check out all data together!
 			done = $.each(data.features, function(key, val){
 				location_array.push(val.properties["Name"]);
 				var csv = val.properties["csv_location"];
-				var csv_url = '/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+				var csv_url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
 				url_array.push(csv_url);
 				//create div for each data-set for static labeling
 				if( table_index%3 === 0 ) row = table.insertRow(table_index/3);
