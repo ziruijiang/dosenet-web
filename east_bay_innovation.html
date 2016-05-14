@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="/sites/default/files/dosenet/data_processing.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+</head>
+
+<body>
+    <div id="my_banner">
+      Our device is installed! East Bay Innovation Academy is our first middle school partner!
+    </div>
+    <br>
+    <div style="font-size:20px;">
+      We had a great visit with Mr. Leahey to bring <a href="/dosenet/map">DoseNet</a> to East Bay Innovation Academy. We are looking forward to our next visit to talk to his 7th grade science classes about radiation science and the DoseNet project.
+    </div>
+    <br>
+
+    <div id="graph_wrapper_div"><div id="graph_div"></div></div>
+    <script type="text/javascript"> 
+      var url = '/sites/default/files/dosenet/ebia.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+      get_data(url,'NEW LOCATION','TIME-ZONE','&microSv/hr','Day','graph_div');
+    </script>
+
+    &nbsp;
+
+    <table class="center " style="float: middle;">
+      <tr>
+        <td>
+            <a rel="image" href="/sites/default/files/pictures/Peter_device.jpg"><img style="width:100%;" src="/sites/default/files/pictures/Peter_device.jpg"/></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="description_block">
+          <center>
+            <p class="description_content_block">Fig 1. Mr. Leahey next to the newly installed DoseNet device.</p>
+          </center>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    &nbsp;
+
+    <table class="center " style="float: middle;">
+      <tr>
+        <td>
+            <a rel="image" href="/sites/default/files/pictures/East_bay_device.jpg"><img style="width:100%;" src="/sites/default/files/pictures/East_bay_device.jpg"/></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="description_block">
+          <center>
+            <p class="description_content_block">Fig 2. New dosenet device sitting in new temporary location on Mr. Leahey's desk.</p>
+          </center>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    &nbsp;
+
+    <div style="font-size:30px;">
+      <a href="/dosenet/map"> Check out the whole network!</a>
+    </div>
+</body>
+</html>
