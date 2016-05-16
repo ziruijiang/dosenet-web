@@ -56,11 +56,6 @@
 				if( table_index%3 === 0 ) row = table.insertRow(table_index/3);
 				cell = row.insertCell(table_index%3);
 				cell.innerHTML = '<div id="'+val.properties["Name"]+'">'+val.properties["Name"]+'</div>';
-				//var div = document.createElement('div');
-				//div.id = val.properties["Name"];
-				//div.textContent = val.properties["Name"];
-				//var parent = document.getElementById("legend");
-				//parent.appendChild(div);
 				table_index += 1;
 		    });
 		    $.when.apply($, done).then( function() {

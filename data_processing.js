@@ -5,6 +5,10 @@ var end_date = new Date();
 var data_string_map = new Map();
 var timeParMap = new Map();
 var colors = [];
+var data_map = new Map();
+var bin_size;
+var time_bins = [];
+
 // timeParMap structure: key = selected time range, value = [absolute time range,max nentries,data compression factor]
 timeParMap.set('Hour',[3600*1000,13,1]);
 timeParMap.set('Day',[24*3600*1000,289,6]);
@@ -87,7 +91,6 @@ function hsvToRGB(hue, saturation, value) {
   blue = Math.floor(255 * blue + 0.5);
   hex = rgbToHex(red,green,blue);
   return hex;
-  //return 'rgb(' + red + ',' + green + ',' + blue + ')';
 }
 
 var colorMap = new Map();
@@ -110,6 +113,13 @@ function setColors(locations){
 function getColors(locations){
   if( colors.length===0 ) setColors(locations);
   return colorMap;
+}
+
+function resetColors(){
+  colors = [];
+  colorMap.forEach( function(color, this_location, colorMap) {
+    colors.push(color);
+  });
 }
 
 function singleErrorPlotter(e) {
@@ -192,6 +202,7 @@ function getTimeRange(text,time) {
   nentries = Math.max(nentries,time_pars[1]);
   // Reset sample_size based on new maximum number of data points
   sample_size = getSampleSize(nentries);
+  if( time== "All" ) sample_size = 1;
   // Go back as far as we can based on current range of available data
   if( oldest_date < start_date ) start_date = oldest_date;
   // Go to the most current date for all input data
@@ -246,6 +257,8 @@ function average_data(raw_data,sample_size,scale)
 function fill_binned_data(data_map,time_bins,bin_size) {
   var time_map = new Map();
   data_map.forEach( function(data, location, data_map ) {
+    // If location not checked don't include in time_map
+    if( !document.getElementById(location).checked ) return;
     for( var i=0; i<data.length; i++) {
       // date for each entry in data array for each location is the first element for that entry
       var this_date = data[i][0];
@@ -304,20 +317,20 @@ function fill_data_input(time_bins,time_map,locations) {
 function process_all_data(csv_map,dose,time) {
   // fill map with key = location, value = [time,[cpm,error]] array from csv file  
   // Full map of all data for all locations
-  var data_map = new Map();
   // Set time binning based on full range of dates from all data
   csv_map.forEach( function(csv, location, csv_map ) {
     getTimeRange(csv,time);
   });
   // default bin size: add 5 minute increments from start (5*60*1000)
   // rebin by sample_size -> bin_size = default*sample_size
-  var bin_size = sample_size*5*60*1000;
-  var time_bins = set_time_bins(start_date,end_date,bin_size);
+  bin_size = sample_size*5*60*1000;
+  time_bins = set_time_bins(start_date,end_date,bin_size);
   //console.log([time_bins[0],time_bins[time_bins.length-1]]);
   //console.log('number of data entries = '+time_bins.length*sample_size);
   nentries = time_bins.length*sample_size;
 
   // Now get and average all data based on full time range available for all locations
+  data_map.clear();
   csv_map.forEach( function(csv, location, csv_map ) {
     var this_data = process_csv(csv,dose,time);
     data_map.set(location,this_data);
@@ -329,13 +342,27 @@ function process_all_data(csv_map,dose,time) {
   return data_input;
 }
 
+function resetData(){
+  colors = [];
+  console.log(colorMap);
+  colorMap.forEach( function(color, location, colorMap) {
+    if( !document.getElementById(location).checked ) return;
+    colors.push(color);
+  });
+  var time_map = fill_binned_data(data_map,time_bins,bin_size);
+  console.log(time_map);
+  var data_input = fill_data_input(time_bins,time_map,get_key_array(colorMap));
+  g.updateOptions({
+    'file': data_input,
+  });
+}
+
 function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
   var title_text = location;
   var y_text = dose;
   // add x-label to beginning of data label array
   time_label = 'Time ('+timezone+')';
   data_labels.unshift(time_label);
-  console.log(data_labels);
   if( time=="All" ) { title_text = 'All data for ' + title_text; }
 
   g = new Dygraph(
@@ -400,17 +427,16 @@ function get_all_data(url_array,locations,dose,time,div) {
   $.when.apply($, csv_get_done).then( function() {
     var return_locations = get_key_array(data_string_map);
     getColors(return_locations);
+    colorMap.forEach( function(color, location, colorMap ) {
+      //console.log('setting color for '+location+' to '+color);
+      document.getElementById(location+'_div').style.color = color;
+      document.getElementById(location).checked = true;
+    });
     var data_input = [];
     data_input = process_all_data(data_string_map,dose,time);
     plot_data("All locations",data_input,dose,"America/Los_Angeles",return_locations,time,div);
-    console.log(colors);
     g.updateOptions({
       colors: colors,
-    });
-    colorMap.forEach( function(color, location, colorMap ) {
-      //console.log('setting color for '+location+' to '+color);
-      document.getElementById(location).style.font = "bold 15px arial,serif";
-      document.getElementById(location).style.color = color;
     });
   });
 }
