@@ -3,8 +3,34 @@
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="/sites/default/files/dosenet/data_processing.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+	<style>
+		input[type=checkbox]
+		{
+		  /* Double-sized Checkboxes */
+		  -ms-transform: scale(1.5); /* IE */
+		  -moz-transform: scale(1.5); /* FF */
+		  -webkit-transform: scale(1.5); /* Safari and Chrome */
+		  -o-transform: scale(1.5); /* Opera */
+		  display: inline;
+		  border: none;
+		  padding: 5px;
+		  margin: 5px;
+		  width: 20px;
+		}
+		.label_text {
+			font-size: 11pt;
+			font-family: arial,serif;
+			font-weight: bold;
+		}
+		.inline-field input,
+		.inline-field label {
+		  display: inline-block;
+		  margin: 5px 5px 5px 5px;
+		  vertical-align: middle; 
+		}
+	</style>
 </head>
 
 <body>
@@ -14,7 +40,7 @@ Check out all data together!
 <br>
 <div id="alldata" style="width:100%"></div>
 <br><br>
-<table id="legend" style="width:100%; border:15px"></table>
+<table id="legend" style="width:100%; border:10px;"></table>
 
 <script type="text/javascript"> 
 	var url = '/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
@@ -22,6 +48,7 @@ Check out all data together!
 	url_array = [];
 	div_id_array = [];
 	var table_index = 0;
+	var ncolumns = 3;
 	var table = document.getElementById("legend");
 
 	$(document).ready(function(){
@@ -36,14 +63,10 @@ Check out all data together!
 				var csv_url = '/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
 				url_array.push(csv_url);
 				//create div for each data-set for static labeling
-				if( table_index%3 === 0 ) row = table.insertRow(table_index/3);
-				cell = row.insertCell(table_index%3);
-				cell.innerHTML = '<div id="'+val.properties["Name"]+'">'+val.properties["Name"]+'</div>';
-				//var div = document.createElement('div');
-				//div.id = val.properties["Name"];
-				//div.textContent = val.properties["Name"];
-				//var parent = document.getElementById("legend");
-				//parent.appendChild(div);
+				if( table_index%ncolumns === 0 ) row = table.insertRow(table_index/ncolumns);
+				cell = row.insertCell(table_index%ncolumns);
+				cell.innerHTML = '<div class="inline-field" id="'+val.properties["Name"]+'_div">'+'<label class="label_text"><input type="checkbox" onchange="resetData()" id="'+val.properties["Name"]+'">'+val.properties["Name"]+'</label></div>';
+				cell.style.textAlign = "left";
 				table_index += 1;
 		    });
 		    $.when.apply($, done).then( function() {
