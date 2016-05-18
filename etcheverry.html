@@ -18,16 +18,28 @@
     <br>
 
     <div id="graph_wrapper_div"><div id="graph_div"></div></div>
+    <table id="legend" style="width:80%; border:10px;"></table>
     <script type="text/javascript"> 
+      var table = document.getElementById("legend");
+      row = table.insertRow(0);
+      cell = row.insertCell(0);
       url_array = [];
       var url = '/sites/default/files/dosenet/etch.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
       url_array.push(url);
+      cell = row.insertCell(1);
+      cell.innerHTML = '<div class="inline-field" id="Etcheverry_div">'+'<label class="label_text"><input type="checkbox" onchange="resetData()" id="Etcheverry">Etcheverry</label></div>';
+      cell.style.textAlign = "left";
+
       url = '/sites/default/files/dosenet/etch_roof.csv?'
         + Math.random().toString(36).replace(/[^a-z]+/g, '');
       url_array.push(url);
-      var location_array = ['Etcheverry','Etch. Roof'];
+      cell = row.insertCell(2);
+      cell.innerHTML = '<div class="inline-field" id="Etcheverry Roof_div">'+'<label class="label_text"><input type="checkbox" onchange="resetData()" id="Etcheverry Roof">Etcheverry Roof</label></div>';
+      cell.style.textAlign = "left";
+      var location_array = ['Etcheverry','Etcheverry Roof'];
       get_all_data(url_array,location_array,'&microSv/hr','Day','graph_div');
+      cell = row.insertCell(3);
     </script>
 
     &nbsp;

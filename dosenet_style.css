@@ -95,3 +95,27 @@ p.description_content_block {
   margin-top: 1em !important;
 }
 
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(1.5); /* IE */
+  -moz-transform: scale(1.5); /* FF */
+  -webkit-transform: scale(1.5); /* Safari and Chrome */
+  -o-transform: scale(1.5); /* Opera */
+  display: inline;
+  border: none;
+  padding: 5px;
+  margin: 5px;
+  width: 20px;
+}
+.label_text {
+  font-size: 11pt;
+  font-family: arial,serif;
+  font-weight: bold;
+}
+.inline-field input,
+.inline-field label {
+  display: inline-block;
+  margin: 5px 5px 5px 5px;
+  vertical-align: middle; 
+}

@@ -8,6 +8,7 @@ var colors = [];
 var data_map = new Map();
 var bin_size;
 var time_bins = [];
+var colorMap = new Map();
 
 // timeParMap structure: key = selected time range, value = [absolute time range,max nentries,data compression factor]
 timeParMap.set('Hour',[3600*1000,13,1]);
@@ -37,7 +38,7 @@ function rgbToHex(r, g, b) {
 }
 
 // Set sample size based on number of entries available rather than time window
-function getSampleSize(nentries) {
+function get_sample_size(nentries) {
   // sample such that there are roughly 150 entries max
   var sample = Math.floor(nentries/150);
   if( sample === 0 ) sample = 1;
@@ -46,10 +47,14 @@ function getSampleSize(nentries) {
 
 //var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/pinewood.csv?'
 //+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
-function parseDate(input) {
+function parse_date(input,timezone) {
   var parts = input.replace('-',' ').replace('-',' ').replace(':',' ').replace(':',' ').replace(',',' ').split(' ');
   // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-  return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]); // Note: months are 0-based
+  this_date = Date.UTC(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]); // Note: months are 0-based
+  //console.log(this_date);
+  //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
+  //return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+  return this_date;
 }
 
 /**
@@ -93,9 +98,7 @@ function hsvToRGB(hue, saturation, value) {
   return hex;
 }
 
-var colorMap = new Map();
-
-function setColors(locations){
+function set_colors(locations){
   ncolors = locations.length;
   console.log('First time setting colors for '+ncolors+' stations');
   var sat = 1.0;
@@ -110,12 +113,12 @@ function setColors(locations){
   }
 }
 
-function getColors(locations){
-  if( colors.length===0 ) setColors(locations);
+function get_colors(locations){
+  if( colors.length===0 ) set_colors(locations);
   return colorMap;
 }
 
-function resetColors(){
+function reset_colors(){
   colors = [];
   colorMap.forEach( function(color, this_location, colorMap) {
     colors.push(color);
@@ -165,7 +168,7 @@ function set_time_bins(start_date,end_date,bin_size){
   return time_array;
 }
 
-function findNearestDate(alist, date, delta) {
+function find_nearest_date(alist, date, delta) {
   var first = 0;
   var last = alist.length-1;
   var found = false;
@@ -188,20 +191,20 @@ function findNearestDate(alist, date, delta) {
   return index;
 }
 
-function getTimeRange(text,time) {
+function get_time_range(text,time,timezone) {
   var lines = text.split("\n");
   var newest_data = lines[lines.length-2].split(",");
   var oldest_data = lines[1].split(",");
-  var newest_date = new Date(parseDate(newest_data[0]));
-  var oldest_date = new Date(parseDate(oldest_data[0]));
+  var newest_date = new Date(parse_date(newest_data[0],timezone));
+  var oldest_date = new Date(parse_date(oldest_data[0],timezone));
 
-  var time_pars = get_time_pars(time,newest_date,oldest_date,lines.length);
+  var time_pars = get_time_pars(time,newest_date,lines.length);
   oldest_date = time_pars[0];
 
   // Get data for maximum number of entries from all data inputs
   nentries = Math.max(nentries,time_pars[1]);
   // Reset sample_size based on new maximum number of data points
-  sample_size = getSampleSize(nentries);
+  sample_size = get_sample_size(nentries);
   if( time== "All" ) sample_size = 1;
   // Go back as far as we can based on current range of available data
   if( oldest_date < start_date ) start_date = oldest_date;
@@ -209,7 +212,7 @@ function getTimeRange(text,time) {
   if( newest_date > end_date ) end_date = newest_date;
 }
 
-function process_csv(text,dose,time) {
+function process_csv(text,dose,time,timezone) {
   var raw_data = [];
   var data_input = [];
   var lines = text.split("\n");
@@ -219,7 +222,7 @@ function process_csv(text,dose,time) {
     var line = lines[i];
     if(line.length>3) {
       var data = line.split(",");
-      var x = new Date(parseDate(data[0]));
+      var x = new Date(parse_date(data[0],timezone));
       if( x.getTime() < start_date.getTime() ) { continue; }
       var y = parseFloat(data[1]);
       raw_data.push([x,y]);
@@ -264,7 +267,7 @@ function fill_binned_data(data_map,time_bins,bin_size) {
       var this_date = data[i][0];
       // time bins is list of bin centers
       // each date should then be either half a bin before or after the bin center
-      var this_bin = findNearestDate(time_bins,this_date,bin_size/2);
+      var this_bin = find_nearest_date(time_bins,this_date,bin_size/2);
       if( this_bin < 0 ) {
         //console.log('WARNING: no valid time bin for data at '+this_date);
         continue;
@@ -319,7 +322,7 @@ function process_all_data(csv_map,dose,time) {
   // Full map of all data for all locations
   // Set time binning based on full range of dates from all data
   csv_map.forEach( function(csv, location, csv_map ) {
-    getTimeRange(csv,time);
+    get_time_range(csv,time,'UTC');
   });
   // default bin size: add 5 minute increments from start (5*60*1000)
   // rebin by sample_size -> bin_size = default*sample_size
@@ -332,7 +335,7 @@ function process_all_data(csv_map,dose,time) {
   // Now get and average all data based on full time range available for all locations
   data_map.clear();
   csv_map.forEach( function(csv, location, csv_map ) {
-    var this_data = process_csv(csv,dose,time);
+    var this_data = process_csv(csv,dose,time,'UTC');
     data_map.set(location,this_data);
   });
 
@@ -342,7 +345,7 @@ function process_all_data(csv_map,dose,time) {
   return data_input;
 }
 
-function resetData(){
+function reset_data(){
   colors = [];
   console.log(colorMap);
   colorMap.forEach( function(color, location, colorMap) {
@@ -426,7 +429,7 @@ function get_all_data(url_array,locations,dose,time,div) {
   csv_get_done = process_urls(url_array,locations);
   $.when.apply($, csv_get_done).then( function() {
     var return_locations = get_key_array(data_string_map);
-    getColors(return_locations);
+    get_colors(return_locations);
     colorMap.forEach( function(color, location, colorMap ) {
       //console.log('setting color for '+location+' to '+color);
       document.getElementById(location+'_div').style.color = color;
@@ -447,11 +450,18 @@ function shift_time(data_input,diff) {
   }
 }
 
+function data_reset(){
+  start_date = new Date();
+  end_date = new Date();
+  nentries = 0;  
+}
+
 function get_data(url,location,timezone,dose,time,div) {
   $.get(url, function (data) {
       var data_input = []; // Clear any old data out before filling!
-      getTimeRange(data,time);
-      data_input = process_csv(data,dose,time);
+      data_reset();
+      get_time_range(data,time,timezone);
+      data_input = process_csv(data,dose,time,timezone);
       // shift date by 12hrs (argument to function is minutes)
       if( timezone=="Asia/Tokyo" ) shift_time(data_input,16*60);
       var data_label = [];

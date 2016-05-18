@@ -45,6 +45,7 @@ function getTZ(val){
 
 function updateInfowindowContent(val){
 	var time = getTimeframe();
+	console.log(time);
 	var dose = getDoseUnit();
 	var url = getURL(val);
 	var name = getName(val);
