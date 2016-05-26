@@ -3,56 +3,122 @@
 <title> Front Page </title>
 <head>
 
-<meta http-equiv="refresh" content="5;url=About.html">
+<meta http-equiv="refresh" content="35;url=Site.html">
 
 <style type="text/css">
-html, body{
-	height: 100%;
-}
-body {
-	background-image: url("Images/atom_copy.jpg");
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-size: contain;
-	height: 100%;
-	width: 100%;
-}
-div.logo {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	width: 30%;
-	height: auto;
-	transform: translate(-65%, -50%);
-}
-div.site {
-	position: absolute;
-	text-align: center;
-	font-size: 180%;
-	color: #0000cc;
-	top: 48%;
-	right: 38%;
-}
-div.dept {
-	position: absolute;
-	font-size: 180%;
-	top: 80%;
-	text-align: center;
-	width: 100%;
-}
+	html, body{
+		height: 100%;
+	}
+	body {
+		background-image: url("Images/atom_copy.jpg");
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: contain;
+		height: 100%;
+		width: 100%;
+	}
+	div.h1 {
+		position: absolute;
+		top: 18%;
+		left:38%;
+		text-align: center;
+		font-size: 200%
+	}
+	
+	div.about{
+		position: absolute;
+		top: 30%;
+	}
+
+	p.about {
+		text-align: justify;
+		font-size:200%;
+		margin-left: auto;
+		margin-right: auto;
+		width: 65%;
+	}
+	div.logo {
+		position: absolute;
+		top: 9%;
+		left: 50%;
+		width: 30%;
+		height: auto;
+		transform: translate(-65%, -50%);
+	}
+	div.site {
+		position: absolute;
+		top: 79%;
+		left: 50%;
+		margin-left: auto;
+		margin-right: auto;
+		
+		transform: translate(-50%,-50%);
+		text-align: center;
+		font-size: 180%;
+	}
+
+	div.twitter {
+		position: absolute;
+		top: 93%;
+		left: 50%;
+		text-align: center;
+		font-size: 180%;
+		margin-left: auto;
+		margin-right: auto;
+		transform: translate(-50%,-50%);
+
+		text-align: center;
+		font-size: 180%;
+	}
+	img.twitter {
+		display: inline;
+		width: 8%;
+		height: 8%;
+	}
+
+	div.dept {
+		position: absolute;
+		font-size: 180%;
+		top: 11%;
+		text-align: center;
+		width: 100%;
+	}
 
 </style>
+
 </head>
+
+<div class="h1">
+		<h3> What is RadWatch? </h3>
+	</div>
+
 <body>
-<div class="logo">
-	<img src="Images/radwatch-header-5.png">
-</div>
-<div class="site"> 
-	<p> radwatch.berkeley.edu </p>
-</div>
-<div class="dept">
-	<p> Department of Nuclear Engineering </p>
-</div>
-</div>
+	
+	<div class="logo">
+		<img src="Images/radwatch-header-5.png">
+	</div>
+
+	<div class="about">
+		<p class="about">
+			We are a group of UC Berkeley <b>Nuclear Engineering </b> students, faculty and Berkeley Lab scientists collaborating to provide <b>transparent </b>, relevant <b> measurements </b> of <b> radioactivity </b> in our <b> local </b> environment for public education and scientific <b>research </b>.
+		</p>
+	</div>
+
+	<div class="site"> 
+		<p> Find out more at <br>
+		<a href="http://radwatch.berkeley.edu/" target="_blank"> radwatch.berkeley.edu </a> <br>
+		</p>
+	</div>
+
+	<div class="twitter">
+		<p> Follow us on Twitter! 
+		<br> <img class="twitter" src="Images/twitter_logo.png"> @UCBRadWatch <br>
+		</p>
+	</div>
+
+	<div class="dept">
+		<p> Department of Nuclear Engineering </p>
+	</div>
+	
 </body>
 </html>
