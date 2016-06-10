@@ -455,7 +455,7 @@ function plot_bar_chart(location_averages,locations,dose,div) {
               valueFormatter: function(x) {
                                                 return locations[x];
                                               },
-              pixelsPerLabel: Math.floor(400/npoints)
+              pixelsPerLabel: Math.floor(300/npoints)
            },
       }
     }
