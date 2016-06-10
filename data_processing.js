@@ -430,7 +430,7 @@ function barChartPlotter(e) {
 }
 
 function plot_bar_chart(location_averages,locations,dose,div) {
-  var title_text = "All locations";
+  var title_text = "Average dose rate over last month";
   var y_text = dose;
   var npoints = locations.length;
   if ( dose=="&microSv/hr" ) { y_text = 'µSv/hr'; }
@@ -455,7 +455,7 @@ function plot_bar_chart(location_averages,locations,dose,div) {
               valueFormatter: function(x) {
                                                 return locations[x];
                                               },
-              pixelsPerLabel: Math.floor(400/npoints)
+              pixelsPerLabel: Math.floor(300/npoints)
            },
       }
     }
