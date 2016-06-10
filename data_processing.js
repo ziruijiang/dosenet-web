@@ -234,6 +234,29 @@ function process_csv(text,dose,time,timezone) {
   return data_input;
 }
 
+function process_csv_average(text,dose,timezone) {
+  var average = 0;
+  var count = 0;
+  var lines = text.split("\n");
+  var scale = calibMap.get(dose);
+
+  for( var i = lines.length - nentries; i < lines.length; ++i ) {
+    if( i < 1 ) { continue; } // skip first line(s) with meta-data
+    var line = lines[i];
+    if(line.length>3) {
+      var data = line.split(",");
+      var x = new Date(parse_date(data[0],timezone));
+      if( x.getTime() < start_date.getTime() ) { continue; }
+      var y = parseFloat(data[1])*scale;
+      average += y;
+      count += 1;
+    }
+  }
+  console.log('dose average = '+average+'/'+count);
+  average = average/parseFloat(count);
+  return average;
+}
+
 function average_data(raw_data,sample_size,scale)
 {
   var averaged_data = [];
@@ -345,19 +368,98 @@ function process_all_data(csv_map,dose,time) {
   return data_input;
 }
 
+function get_averages(csv_map,dose) {
+  var location_averages = [];
+  var counter = 0;
+  csv_map.forEach( function(csv, location, csv_map ) {
+    get_time_range(csv,'Month','UTC');
+  });
+  csv_map.forEach( function(csv, location, csv_map ) {
+    var average = process_csv_average(csv,dose,'UTC');
+    location_averages.push([counter,average]);
+    counter = counter + 1;
+  });
+  return location_averages;
+}
+
 function reset_data(){
   colors = [];
-  console.log(colorMap);
+  //console.log(colorMap);
   colorMap.forEach( function(color, location, colorMap) {
     if( !document.getElementById(location).checked ) return;
     colors.push(color);
   });
   var time_map = fill_binned_data(data_map,time_bins,bin_size);
-  console.log(time_map);
+  //console.log(time_map);
   var data_input = fill_data_input(time_bins,time_map,get_key_array(colorMap));
   g.updateOptions({
     'file': data_input,
   });
+}
+
+function darkenColor(colorStr) {
+  // Defined in dygraph-utils.js
+  var color = Dygraph.toRGB_(colorStr);
+  color.r = Math.floor((255 + color.r) / 2);
+  color.g = Math.floor((255 + color.g) / 2);
+  color.b = Math.floor((255 + color.b) / 2);
+  return 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';
+}
+
+function barChartPlotter(e) {
+  var ctx = e.drawingContext;
+  var points = e.points;
+  var y_bottom = e.dygraph.toDomYCoord(0);
+
+  ctx.fillStyle = darkenColor(e.color);
+
+  var sep = points[1].canvasx - points[0].canvasx;
+  var bar_width = Math.floor(2.0 / 3 * sep);
+
+  // Do the actual plotting.
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    var center_x = p.canvasx;
+
+    ctx.fillRect(center_x - bar_width / 2, p.canvasy,
+        bar_width, y_bottom - p.canvasy);
+
+    ctx.strokeRect(center_x - bar_width / 2, p.canvasy,
+        bar_width, y_bottom - p.canvasy);
+  }
+}
+
+function plot_bar_chart(location_averages,locations,dose,div) {
+  var title_text = "All locations";
+  var y_text = dose;
+  var npoints = locations.length;
+  if ( dose=="&microSv/hr" ) { y_text = 'µSv/hr'; }
+
+  bar = new Dygraph(
+    // containing div
+    document.getElementById(div),
+    location_averages,
+    { title: title_text,
+      ylabel: y_text,
+      includeZero: true,
+      labels: ['location',y_text],
+      plotter: barChartPlotter,
+      xRangePad: 30,
+      xLabelHeight: 50,
+      drawXGrid: false,
+      axes: {
+        x: {
+              axisLabelFormatter: function(x) {
+                                                return locations[x];
+                                              },
+              valueFormatter: function(x) {
+                                                return locations[x];
+                                              },
+              pixelsPerLabel: Math.floor(400/npoints)
+           },
+      }
+    }
+  );
 }
 
 function plot_data(location,data_input,dose,timezone,data_labels,time,div) {
@@ -424,6 +526,17 @@ function get_key_array(map) {
   return key_array;
 }
 
+function get_bar_chart(url_array,locations,dose,div) {
+  data_string_map.clear();
+  var location_averages = [];
+  csv_get_done = process_urls(url_array,locations);
+  $.when.apply($, csv_get_done).then( function() {
+    var return_locations = get_key_array(data_string_map);
+    location_averages = get_averages(data_string_map,dose);
+    plot_bar_chart(location_averages,return_locations,dose,div);
+  });
+}
+
 function get_all_data(url_array,locations,dose,time,div) {
   data_string_map.clear();
   csv_get_done = process_urls(url_array,locations);
@@ -464,6 +577,7 @@ function get_data(url,location,timezone,dose,time,div) {
       data_input = process_csv(data,dose,time,timezone);
       // shift date by 12hrs (argument to function is minutes)
       if( timezone=="Asia/Tokyo" ) shift_time(data_input,16*60);
+      if( timezone=="Asia/Seoul" ) shift_time(data_input,16*60);
       var data_label = [];
       if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
       else data_label.push(dose);

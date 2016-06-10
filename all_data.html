@@ -5,6 +5,15 @@
 	<script src="/sites/default/files/dosenet/data_processing.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
 	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+	<style>
+	.dygraph-axis-label-x {
+	-webkit-transform: rotate(45deg); 
+	-moz-transform: rotate(45deg);
+	    float: middle;
+	    margin: 15px 0 15px 5px;
+	      font-size: 9px;
+	}
+	</style>
 </head>
 
 <body>
@@ -12,6 +21,8 @@
 Check out all data together!
 </div>
 <br>
+<div id="chartdata" style="width:100%"></div>
+<br><br><br>
 <div id="alldata" style="width:100%"></div>
 <br><br>
 <table id="legend" style="width:100%; border:10px;"></table>
@@ -44,6 +55,7 @@ Check out all data together!
 				table_index += 1;
 		    });
 		    $.when.apply($, done).then( function() {
+		    	get_bar_chart(url_array,location_array,'&microSv/hr','chartdata');
 				get_all_data(url_array,location_array,'&microSv/hr','Month','alldata');
 		    });
 		});

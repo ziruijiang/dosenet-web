@@ -135,11 +135,16 @@ function goToDosimeter(){
 	var index = getSelectedDosimeterIndex();
 	var center = getDosimeterCoords(index);
 	map.setCenter(center);
+	map.setZoom(9);
 }
 
 function initMap(){
 	map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 9,
+		zoomControl:true,
+		zoomControlOptions: {
+		  style:google.maps.ZoomControlStyle.SMALL
+		},
 		disableDefaultUI: true
 	});
 	google.maps.event.addListener(map, 'click', function() {
