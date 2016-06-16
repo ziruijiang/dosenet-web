@@ -31,7 +31,6 @@
 		$(document).ready(function(){
 			var marker;
 			initMap();
-			centerMap(berkeley); //Because we're self-centered.
 			SetUnitMap();
 
 			console.log('getting station info from json file:'+url);
@@ -59,10 +58,7 @@
 				    setMarkerIcon(marker);
 					addMarkerEventListeners(val, marker);
 			    });
-				for (var i = 0; i < markers.length; i++) {
-				 bounds.extend(markers[i].getPosition());
-				}
-				map.fitBounds(bounds);
+			    //setMapBounds();
 				addTimeDropdownListener();
 				addUnitDropdownListener();
 				var mcOptions = {gridSize: 40, maxZoom: 15};

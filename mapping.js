@@ -1,7 +1,6 @@
 var map; // Google Map Object
 var berkeley = [37.872269, -122.258901];
 var markers = [];
-var bounds = new google.maps.LatLngBounds();
 var json_vals = [];
 var markerCluster;
 var marks = [];
@@ -18,6 +17,28 @@ var graph_url = '';
 var selected_marker = '';
 var selected_val = '';
 var unitMap = new Map();
+var mapOptions = {
+   center: new google.maps.LatLng(-34.397, 150.644),
+   zoom: 1,
+   minZoom: 1
+};
+
+var allowedBounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(85, -180),           // top left corner of map
+	new google.maps.LatLng(-85, 180)            // bottom right corner
+  );
+
+function setMapBounds(){
+	var k = 5.0; 
+	var n = allowedBounds.getNorthEast().lat() - k; 
+	var e = allowedBounds.getNorthEast().lng() - k; 
+	var s = allowedBounds.getSouthWest().lat() + k; 
+	var w = allowedBounds.getSouthWest().lng() + k; 
+	var neNew = new google.maps.LatLng( n, e ); 
+	var swNew = new google.maps.LatLng( s, w ); 
+	boundsNew = new google.maps.LatLngBounds( swNew, neNew );
+	map.fitBounds(boundsNew);
+}
 
 function centerMap(center){
 	var mapCenter = new google.maps.LatLng(center[0], center[1]);
@@ -140,7 +161,9 @@ function goToDosimeter(){
 
 function initMap(){
 	map = new google.maps.Map(document.getElementById('map-canvas'), {
-		zoom: 9,
+		center: new google.maps.LatLng(0, 0),
+		zoom: 1,
+		minZoom: 1,
 		zoomControl:true,
 		zoomControlOptions: {
 		  style:google.maps.ZoomControlStyle.SMALL

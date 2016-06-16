@@ -247,14 +247,14 @@ function process_csv_average(text,dose,timezone) {
       var data = line.split(",");
       var x = new Date(parse_date(data[0],timezone));
       if( x.getTime() < start_date.getTime() ) { continue; }
-      var y = parseFloat(data[1])*scale;
+      var y = parseFloat(data[1]);
       average += y;
       count += 1;
     }
   }
-  console.log('dose average = '+average+'/'+count);
-  average = average/parseFloat(count);
-  return average;
+  error = Math.sqrt(average)/parseFloat(count)*scale;
+  average = average/parseFloat(count)*scale;
+  return [average,error];
 }
 
 function average_data(raw_data,sample_size,scale)
@@ -441,6 +441,7 @@ function plot_bar_chart(location_averages,locations,dose,div) {
     location_averages,
     { title: title_text,
       ylabel: y_text,
+      errorBars: true,
       includeZero: true,
       labels: ['location',y_text],
       plotter: barChartPlotter,
@@ -455,7 +456,7 @@ function plot_bar_chart(location_averages,locations,dose,div) {
               valueFormatter: function(x) {
                                                 return locations[x];
                                               },
-              pixelsPerLabel: Math.floor(300/npoints)
+              pixelsPerLabel: Math.floor(500/npoints)
            },
       }
     }
