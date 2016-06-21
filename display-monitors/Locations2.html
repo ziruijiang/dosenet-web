@@ -1,38 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="refresh" content="30;url=Locations2.html">
+	<meta http-equiv="refresh" content="30;url=WeatherStation.html">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="../data_processing.js"></script>
-	<script src="http://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
-	<link rel="stylesheet" type="text/css" href="../dosenet_style.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+	<link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
 	<style>
-	div.data {
-		width: 100%;
-	}
-	#legend {
-		align: center;
-		width: 75%;
-		border: 15px;
-	}
-	td {
-    	padding-left: 75px;
-	    text-align: left;
-	}
-	h2 {
-		text-align: center;
-		font-size: 150%;
-	}
+		.dygraph-axis-label-x {
+	 	-webkit-transform: rotate(45deg); 
+	 	-moz-transform: rotate(45deg);
+	 	    float: middle;
+	 	    margin: 15px 0 15px 5px;
+	 	      font-size: 9px;
+	 	}
+		h2 {
+			text-align: center;
+			font-size: 150%;
+		}
 	</style>
 </head>
 
 <body>
 <h2> <a href="http://radwatch.berkeley.edu/" target="_blank"> radwatch.berkeley.edu </a> </h2>
-
-<div id="alldata" align="center" style="width:75%; margin: 0 auto"></div>
-<br><br>
-<table id="legend" align="center" style="width: 75%;" ></table>
+<br>
+<div id="chartdata" align="center" style="width:75%; margin: 0 auto"></div>
 
 <script type="text/javascript"> 
 	var url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/output.geojson'+'?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
@@ -42,6 +35,7 @@
 	var table_index = 0;
 	var ncolumns = 3;
 	var table = document.getElementById("legend");
+
 	$(document).ready(function(){
 		// Fetch geoJSON file - runs function on complete, 'data' is extracted from JSON
 		$.getJSON(url, function(data){
@@ -53,15 +47,9 @@
 				var csv = val.properties["csv_location"];
 				var csv_url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
 				url_array.push(csv_url);
-				//create div for each data-set for static labeling
-				if( table_index%3 === 0 ) row = table.insertRow(table_index/3);
-				cell = row.insertCell(table_index%ncolumns);
-				cell.innerHTML = '<div class="inline-field" id="'+val.properties["Name"]+'_div">'+'<label class="label_text"><input type="checkbox" onchange="reset_data()" id="'+val.properties["Name"]+'">'+val.properties["Name"]+'</label></div>';
-				cell.style.textAlign = "left";
-				table_index += 1;
 		    });
 		    $.when.apply($, done).then( function() {
-				get_all_data(url_array,location_array,'&microSv/hr','Month','alldata');
+		    	get_bar_chart(url_array,location_array,'&microSv/hr','chartdata');
 		    });
 		});
 	});
