@@ -23,6 +23,7 @@
 	height: 400px;
 	margin-bottom:1em !important;
 	margin-top: 0.0em !important;
+	clear:both;
 }
 #dosimeter_list {
 	padding: 0.5em;
