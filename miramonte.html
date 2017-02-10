@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="/sites/default/files/dosenet/data_processing.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+</head>
+
+<body>
+    <div id="my_banner">
+      DoseNet has added a new location!
+    </div>
+    <br>
+    <div style="font-size:20px;">
+      We had a great first visit to Miramonte High School to install our device and talk to Ms. Hauptman about coming back to visit with the STEM club and talk to her class. We are looking forward to our future visits!
+    </div>
+    <br>
+
+    <div id="graph_wrapper_div"><div id="graph_div"></div></div>
+    <script type="text/javascript"> 
+      var url = '/sites/default/files/dosenet/miramonte.csv?'
+        + Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
+      get_data(url,'NEW LOCATION','TIME-ZONE','&microSv/hr','Day','graph_div');
+    </script>
+
+    &nbsp;
+
+    <table class="center " style="float: middle;">
+      <tr>
+        <td>
+            <a rel="image" href="/sites/default/files/pictures/Miramonte_room.jpg"><img style="width:100%;" src="/sites/default/files/pictures/Miramonte_room.jpg"/></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="description_block">
+          <center>
+            <p class="description_content_block">Fig 1. The new Miramonte device is nestled next to Ms. Hauptman's white board behind her desk where students can wonder about that strange blinking blue light. By the way, love the science mantra!</p>
+          </center>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    &nbsp;
+
+    <div style="font-size:30px;">
+      <a href="/dosenet/map"> Check out the whole network!</a>
+    </div>
+</body>
+</html>

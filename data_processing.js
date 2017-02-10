@@ -48,12 +48,11 @@ function get_sample_size(nentries) {
 //var url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/pinewood.csv?'
 //+ Math.random().toString(36).replace(/[^a-z]+/g, ''); // To solve browser caching issue
 function parse_date(input,timezone) {
-  var parts = input.replace('-',' ').replace('-',' ').replace(':',' ').replace(':',' ').replace(',',' ').split(' ');
+  var parts = input.replace('-',' ').replace('-',' ').replace(':',' ').replace(':',' ').replace('+',' ').replace('-',' ').split(' ');
   // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
-  this_date = Date.UTC(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]); // Note: months are 0-based
-  //console.log(this_date);
+  //this_date = Date.UTC(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]); // Note: months are 0-based
   //tz_date = this_date.toLocaleString('UTC', { timeZone: timezone });
-  //return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+  this_date =  new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
   return this_date;
 }
 
@@ -193,10 +192,10 @@ function find_nearest_date(alist, date, delta) {
 
 function get_time_range(text,time,timezone) {
   var lines = text.split("\n");
-  var newest_data = lines[lines.length-2].split(",");
-  var oldest_data = lines[1].split(",");
-  var newest_date = new Date(parse_date(newest_data[0],timezone));
-  var oldest_date = new Date(parse_date(oldest_data[0],timezone));
+  var oldest_data = lines[lines.length-2].split(",");
+  var newest_data = lines[1].split(",");
+  var newest_date = new Date(parse_date(newest_data[1],timezone));
+  var oldest_date = new Date(parse_date(oldest_data[1],timezone));
 
   var time_pars = get_time_pars(time,newest_date,lines.length);
   oldest_date = time_pars[0];
@@ -217,15 +216,18 @@ function process_csv(text,dose,time,timezone) {
   var data_input = [];
   var lines = text.split("\n");
 
-  for( var i = lines.length - nentries; i < lines.length; ++i ) {
+  for( var i = 0; i < nentries+1; ++i ) {
     if( i < 1 ) { continue; } // skip first line(s) with meta-data
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
     var line = lines[i];
-    if(line.length>3) {
-      var data = line.split(",");
-      var x = new Date(parse_date(data[0],timezone));
-      if( x.getTime() < start_date.getTime() ) { continue; }
-      var y = parseFloat(data[1]);
-      raw_data.push([x,y]);
+    if (typeof line != 'undefined') {
+      if(line.length>3) {
+        var data = line.split(",");
+        var x = new Date(parse_date(data[1],timezone));
+        if( x.getTime() < start_date.getTime() ) { continue; }
+        var y = parseFloat(data[6]);
+        raw_data.push([x,y]);
+      }
     }
   }
 
@@ -240,21 +242,24 @@ function process_csv_average(text,dose,timezone) {
   var lines = text.split("\n");
   var scale = calibMap.get(dose);
 
-  for( var i = lines.length - nentries; i < lines.length; ++i ) {
+  for( var i = 0; i < nentries+1; ++i ) {
     if( i < 1 ) { continue; } // skip first line(s) with meta-data
+    if( lines.length < i-1 ) continue; // move on if there are fewer than nentries in input files
     var line = lines[i];
-    if(line.length>3) {
-      var data = line.split(",");
-      var x = new Date(parse_date(data[0],timezone));
-      if( x.getTime() < start_date.getTime() ) { continue; }
-      var y = parseFloat(data[1])*scale;
-      average += y;
-      count += 1;
+    if (typeof line != 'undefined') {
+      if(line.length>3) {
+        var data = line.split(",");
+        var x = new Date(parse_date(data[1],timezone));
+        if( x.getTime() < start_date.getTime() ) { continue; }
+        var y = parseFloat(data[6]);
+        average += y;
+        count += 1;
+      }
     }
   }
-  console.log('dose average = '+average+'/'+count);
-  average = average/parseFloat(count);
-  return average;
+  error = Math.sqrt(average)/parseFloat(count)*scale;
+  average = average/parseFloat(count)*scale;
+  return [average,error];
 }
 
 function average_data(raw_data,sample_size,scale)
@@ -276,6 +281,11 @@ function average_data(raw_data,sample_size,scale)
     var date = mid_data[0];
     averaged_data.push([date,[average*scale,error*scale]]);
   }
+  averaged_data.sort((function(index){
+    return function(a,b){
+      return a[index].getTime() - b[index].getTime();
+    };
+  })(0));
   return averaged_data;
 }
 
@@ -351,8 +361,6 @@ function process_all_data(csv_map,dose,time) {
   // rebin by sample_size -> bin_size = default*sample_size
   bin_size = sample_size*5*60*1000;
   time_bins = set_time_bins(start_date,end_date,bin_size);
-  //console.log([time_bins[0],time_bins[time_bins.length-1]]);
-  //console.log('number of data entries = '+time_bins.length*sample_size);
   nentries = time_bins.length*sample_size;
 
   // Now get and average all data based on full time range available for all locations
@@ -384,13 +392,11 @@ function get_averages(csv_map,dose) {
 
 function reset_data(){
   colors = [];
-  //console.log(colorMap);
   colorMap.forEach( function(color, location, colorMap) {
     if( !document.getElementById(location).checked ) return;
     colors.push(color);
   });
   var time_map = fill_binned_data(data_map,time_bins,bin_size);
-  //console.log(time_map);
   var data_input = fill_data_input(time_bins,time_map,get_key_array(colorMap));
   g.updateOptions({
     'file': data_input,
@@ -441,6 +447,7 @@ function plot_bar_chart(location_averages,locations,dose,div) {
     location_averages,
     { title: title_text,
       ylabel: y_text,
+      errorBars: true,
       includeZero: true,
       labels: ['location',y_text],
       plotter: barChartPlotter,
@@ -512,7 +519,6 @@ function process_urls(url_array,locations) {
   $.each(url_array,function(i,url) {
     csv_get_done.push($.get(url, function(data) {
       add_data_string(data,locations[i]);
-      //console.log('adding data from '+url+' to '+locations[i]);
     }, dataType='text'));
   });
   return csv_get_done;
@@ -544,7 +550,6 @@ function get_all_data(url_array,locations,dose,time,div) {
     var return_locations = get_key_array(data_string_map);
     get_colors(return_locations);
     colorMap.forEach( function(color, location, colorMap ) {
-      //console.log('setting color for '+location+' to '+color);
       document.getElementById(location+'_div').style.color = color;
       document.getElementById(location).checked = true;
     });
@@ -576,8 +581,8 @@ function get_data(url,location,timezone,dose,time,div) {
       get_time_range(data,time,timezone);
       data_input = process_csv(data,dose,time,timezone);
       // shift date by 12hrs (argument to function is minutes)
-      if( timezone=="Asia/Tokyo" ) shift_time(data_input,16*60);
-      if( timezone=="Asia/Seoul" ) shift_time(data_input,16*60);
+      //if( timezone=="Asia/Tokyo" ) shift_time(data_input,16*60);
+      //if( timezone=="Asia/Seoul" ) shift_time(data_input,16*60);
       var data_label = [];
       if ( dose=="&microSv/hr" ) { data_label.push("µSv/hr"); }
       else data_label.push(dose);
