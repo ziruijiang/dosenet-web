@@ -7,8 +7,9 @@ if __name__ == "__main__":
     		'https://radwatch.berkeley.edu/dosenet/map#dosenet_rad_banner',
     		'https://radwatch.berkeley.edu/dosenet/data#chartdata',
     		'file:///home/pi/dosenet-web/display-monitors/Locations2.html',
-    		'file:///home/pi/dosenet-web/display-monitors/WeatherStation.html']
-    sleeps = [10,60,10,30,30,30,15]
+    		'file:///home/pi/dosenet-web/display-monitors/WeatherStation.html',
+            'file:///home/pi/dosenet-web/display-monitors/FindMore.html']
+    sleeps = [10,60,10,30,30,30,20,15]
 b = webdriver.Firefox()
 
 while True:
