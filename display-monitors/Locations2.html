@@ -45,7 +45,7 @@
 			done = $.each(data.features, function(key, val){
 				location_array.push(val.properties["Name"]);
 				var csv = val.properties["csv_location"];
-				var csv_url = 'http://cors.io/?u=https://radwatch.berkeley.edu/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
+				var csv_url = 'https://radwatch.berkeley.edu/sites/default/files/dosenet/' + csv + '?' + Math.random().toString(36).replace(/[^a-z]+/g, '');
 				url_array.push(csv_url);
 		    });
 		    $.when.apply($, done).then( function() {
