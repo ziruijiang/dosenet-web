@@ -17,13 +17,13 @@ if __name__ == "__main__":
     sleeps = [10,30,10,10,30,30,30,20,15]
 
 profile = webdriver.FirefoxProfile()
-extensions = [f for f in listdir(firefox_extension_path) if isfile(join(firefox_extension_path, f))]
+extensions = [join(firefox_extension_path, f) for f in listdir(firefox_extension_path) if isfile(join(firefox_extension_path, f))]
 for f in extensions:
     profile.add_extension(f)
 
-profile.set_preference("hidenavbar.hidden", true)
+profile.set_preference("hidenavbar.hidden", True)
 profile.set_preference("hidenavbar.hideonstart", 1)
-profile.set_preference("extensions.hidtb.auto_hide_one_tab", true)
+profile.set_preference("extensions.hidtb.auto_hide_one_tab", True)
 
 b = webdriver.Firefox(firefox_profile=profile)
 b.set_window_position(0,0)
