@@ -17,7 +17,7 @@ if __name__ == "__main__":
     sleeps = [10,30,10,10,30,30,30,20,15]
 
 profile = webdriver.FirefoxProfile()
-extentions = [f for f in listdir(firefox_extension_path) if isfile(join(firefox_extension_path, f))]
+extensions = [f for f in listdir(firefox_extension_path) if isfile(join(firefox_extension_path, f))]
 for f in extensions:
     profile.add_extension(f)
 
