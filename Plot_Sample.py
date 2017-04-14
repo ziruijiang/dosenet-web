@@ -1,10 +1,11 @@
+#!/usr/bin/python3
 from collections import deque
 import ast
 #from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
 import os
 import matplotlib
-import Tkinter as tk
+import tkinter as tk
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
