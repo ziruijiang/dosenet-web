@@ -555,7 +555,7 @@ function get_all_data(url_array,locations,dose,time,div) {
     });
     var data_input = [];
     data_input = process_all_data(data_string_map,dose,time);
-    plot_data("All locations",data_input,dose,"America/Los_Angeles",return_locations,time,div);
+    plot_data("All locations",data_input,dose,"local time zone",return_locations,time,div);
     g.updateOptions({
       colors: colors,
     });

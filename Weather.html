@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="/sites/default/files/dosenet/data_processing.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/1.1.1/dygraph-combined.js"></script>
+  <link rel="stylesheet" type="text/css" href="/sites/default/files/dosenet/dosenet_style.css">
+</head>
+
+<body>
+    <div id="my_banner" style="font-size:15px">
+         Adding weather measurements to <a href="/dosenet/map">DoseNet</a> expands our environmental data collection and allows radiation levels to be correlated to weather. Here we provide the steps needed to install an affordable weather station and establish publically accessible hosting of the data obtained by the station.
+    </div>
+    <br>
+    Measurements of radiation levels from DoseNet network will vary over time. This variation in the natural background radiation level can result from a variety of weather-related factors. For this reason, it is useful to have weather data in close proximity to the DoseNet device location that can be correlated with measurements from the device to look for and verify weather driven variations in the radiation levels observed.
+    <br><br>
+    Our team has explored various weather station options and made a selection based on the price point and range of data-types provided. A test weather station has been installed at Lawrence Berkeley National Lab (LBL) as a model for other locations interested in provided weather data to compliment their DoseNet sensor data. Details of the installation process are provided here.
+    <br>
+    <h3>
+    Personal Weather Station Setup Guide
+    </h3>
+    <ol style="list-style-type:upper-roman">
+      <li> Purchase a Weather Station
+        <ul style="list-style:circle outside none; margin-left: 0; padding-left: 1em;">
+          <li> Recommended weather station ($160): 
+            <a href="https://www.amazon.com/dp/B00O9YIEJW/ref=cm_sw_su_dp">Ambient Weather WS-1400</a></li>
+          <li> Package includes:
+            <ol style="list-style:lower-alpha outside"> 
+              <li> outdoor sensor array </li>
+              <li> indoor sensor </li>
+              <li> receiver </li>
+              <li> ethernet cable </li>
+              <li> mounting poles and hardware </li>
+              <li> three AA rechargeable batteries for the outdoor sensor </li>
+            </ol>
+            </li>
+          <li> Optional Accessories: <a href="http://www.ambientweather.com/amwemoso.html"> 
+            Mounting Solutions from Ambient Weather </a></li>
+          <li> Note: 2 AAA batteries (not included) required for the indoor sensor.</li>
+        </ul>
+      </li>
+      <li> Setup Sensors 
+        <ul style="list-style:circle outside none; margin-left: 0; padding-left: 1em;">
+          <li> Install the mounting poles and install the wind vane onto the shaft </li>
+          <li> Insert batteries into both sensors: outdoor (3 AA), indoor (2 AAA) </li>
+          <li> Note: outdoor sensor should be mounted such that
+            <ol style="list-style:lower-alpha outside"> 
+              <li> There is full exposure to sun/wind/rain (i.e. roof) </li>
+              <li> It is within 300 feet of the receiver, 100 feet for best results </li>
+            </ol></li>
+          <li> Note: Indoor sensor should be within 15-20 feet from the receiver </li>
+        </ul>
+      </li>
+      <li> Setup Receiver 
+        <ul style="list-style:circle outside none; margin-left: 0; padding-left: 1em;">
+          <li> Connect the receiver to AC power and ethernet </li>
+          <li> Download <a href="http://www.ambientweather.com/observerip.html"> IP Tool </a> from Ambient Weather </li>
+          <li> From the same network as the receiver, run the IP Tool and click search. </li>
+          <li> Select the device that shows up on the list and click open to go to site for this station
+            provided by Ambient Weather ObserverIP </li>
+        </ul>
+      </li>
+      <li> Join the Personal Weather Station Network 
+        <ul style="list-style:circle outside none; margin-left: 0; padding-left: 1em;">
+          <li> Set up an account on <a href="https://www.wunderground.com/"> Weather Underground</a></li>
+          <li> Select <a href="https://www.wunderground.com/personal-weather-station/signup"> More | Register Your PWS</a>
+             to register your weather station</li>
+          <li> Enter the information for your station and obtain a station ID </li>
+          <li> Enter station ID and weather underground password on the ObserverIP weather Panel 
+            (Under “Weather Network”)</li>
+          <li> You should now have a web page dedicated to your station (see below).</li>
+        </ul>
+      </li>
+    </ol>
+    <br>
+    Our weather station is not yet mounted at the top of our building, meaning the data is not fully complete for this station. It is, however, serving as our pilot test-station to explore how well this expansion to DoseNet works. The development of learning modules for using this data in conjunction with radiation measurements from the DoseNet radiation detection devices is ongoing.
+    <br><br>
+    Some of our partner locations have already installed weather stations from a different provider. Though these alternatives may have different price-points, installation procedures, and interfaces for access to data, they provide the same range of environmental data for use in analyses comparing to variations in radiation levels.
+    <ul style="list-style:circle inside">
+    </ul>
+
+    <h3> Current Weather Station Locations </h3>
+    <ul style="list-style:circle inside">
+      <li> LBL test station </li>
+        <ul><li>
+          <table><tr>
+            <td>
+              <object width="290" height="130"><param name="movie" value="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCABERKE89&freq=&units=english&lang=EN" /><embed src="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCABERKE89&freq=&units=english&lang=EN" type="application/x-shockwave-flash" width="290" height="130" /></object>
+            </td>
+            <td>
+              <a href="https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KCABERKE89"><img src="http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=pws250_both&weatherstationcount=KCABERKE89" width="250" height="150" border="0" alt="Weather Underground PWS KCABERKE89" /></a>
+            </td>
+          </tr></table>
+        </li></ul><br><br>
+      <li> Harbor Bay </li>
+        <ul><li>
+          <table><tr>
+            <td>
+              <object width="290" height="130"><param name="movie" value="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCAALAME46&freq=&units=english&lang=EN" /><embed src="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCAALAME46&freq=&units=english&lang=EN" type="application/x-shockwave-flash" width="290" height="130" /></object>
+            </td>
+            <td>
+              <a href="https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KCAALAME46"><img src="http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=pws250_both&weatherstationcount=KCAALAME46" width="250" height="150" border="0" alt="Weather Underground PWS KCAALAME46" /></a>
+            </td>
+          </tr></table>
+        </li></ul><br><br>
+      <li> Miramonte High School </li>
+        <ul><li>
+          <table><tr>
+            <td>
+              <object width="290" height="130"><param name="movie" value="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCAORIND34&freq=&units=english&lang=EN" /><embed src="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCAORIND34&freq=&units=english&lang=EN" type="application/x-shockwave-flash" width="290" height="130" /></object>
+            </td>
+            <td>
+              <a href="https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KCAORIND34"><img src="http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=pws250_both&weatherstationcount=KCAORIND34" width="250" height="150" border="0" alt="Weather Underground PWS KCAORIND34" /></a>
+            </td>
+          </tr></table>
+        </li></ul><br><br>
+      <li> <a href="https://rainwise.net/weather/campolindo"> Campolindo High School (Rainwise Weather Station)</a></li>
+        <ul><li>
+          <table><tr>
+            <td>
+              <object width="290" height="130"><param name="movie" value="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCAMORAG25&freq=&units=english&lang=EN" /><embed src="https://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=KCAMORAG25&freq=&units=english&lang=EN" type="application/x-shockwave-flash" width="290" height="130" /></object>
+            </td>
+            <td>
+              <a href="https://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KCAMORAG25"><img src="http://banners.wunderground.com/cgi-bin/banner/ban/wxBanner?bannertype=pws250_both&weatherstationcount=KCAMORAG25" width="250" height="150" border="0" alt="Weather Underground PWS KCAMORAG25" /></a>
+            </td>
+          </tr></table>
+        </li></ul><br><br>      
+    </ul> 
+    <br>
+    <h3> We look forward to bringing new weather stations into our data network! </h3>
+
+    <table class="center " style="float: middle;">
+      <tr>
+        <td>
+            <a rel="image" href="/sites/default/files/pictures/LBNL_WeatherStation.jpg"><img style="width:100%;" src="/sites/default/files/pictures/LBNL_WeatherStation.jpg"/></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="description_block">
+          <center>
+            <p class="description_content_block">Fig 1. Weather station installed at LBL, mounted temporarily using a basic pole mount obtained through the laboratory. Final mounting should be on the roof of the main building for best exposure and unmodified wind pattern measurements.</p>
+          </center>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+
+    &nbsp;
+
+
+    <div style="font-size:30px;">
+      <a href="/dosenet/map"> Back to DoseNet!</a>
+    </div>
+</body>
+</html>
