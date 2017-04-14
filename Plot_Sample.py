@@ -1,12 +1,15 @@
 from collections import deque
 import ast
-from globalvalues import DEFAULT_DATALOG_D3S
+#from globalvalues import DEFAULT_DATALOG_D3S
 import numpy as np
 import os
+import matplotlib
+import tkinter as tk
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import colorConverter
+from multiprocessing import Process
 
 
 
@@ -112,16 +115,22 @@ def sum_graph():
     """
     Plots the sum of all the spectra
     """
+    matplotlib.use("TkAgg")
+    x = tk.Tk().winfo_screenwidth()
+    y = tk.Tk().winfo_screenheight()
+
     plt.ion()
     i=1
     while (i<9):
         queue = grab_data(i)
         total = sum_data(queue)
+        plt.get_current_fig_manager().window.setGeometry(0.2*x,0.3*y,640,545)
         plt.clf()
         plot_data(total)
         i+=1
-    #while True:
-        #plt.pause(0.8)
+        plt.pause(0.7)
+    while True:
+        plt.pause(0.7)
 
 
         
@@ -129,13 +138,17 @@ def waterfall_graph():
     """
     Plots a waterfall graph of all the spectra. Just needs to test with actual data
     """
+    matplotlib.use("TkAgg")
+    x = tk.Tk().winfo_screenwidth()
+    y = tk.Tk().winfo_screenheight()
+    
     plt.ion()
     i=1
     while (i<9):
         queue = grab_data(i)
         queue_length = len(queue)
         image = make_image(queue)
-        
+        plt.get_current_fig_manager().window.setGeometry(0.8*x,0.3*y,640,545)
         plt.clf()
         i+=1
 
@@ -153,8 +166,12 @@ def waterfall_graph():
 
     
 if __name__ == '__main__':      
-    sum_graph()
-    waterfall_graph()
+    p1 = Process(target=sum_graph)
+    p1.start()
+    p2 = Process(target=waterfall_graph)
+    p2.start()
+    p1.join()
+    p2.join()
 
 
 
