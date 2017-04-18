@@ -5,6 +5,7 @@ import ast
 import numpy as np
 import os
 import matplotlib
+matplotlib.use("Qt4Agg")
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
@@ -119,7 +120,7 @@ def sum_graph():
     #matplotlib.use("TkAgg")
     # x = tk.Tk().winfo_screenwidth()
     # y = tk.Tk().winfo_screenheight()
-    matplotlib.use("Qt4Agg")
+    #matplotlib.use("Qt4Agg")
     plt.ion()
     mgr = plt.get_current_fig_manager()
     mgr.full_screen_toggle() 
@@ -148,7 +149,7 @@ def waterfall_graph():
     # matplotlib.use("TkAgg")
     # x = tk.Tk().winfo_screenwidth()
     # y = tk.Tk().winfo_screenheight()
-    matplotlib.use("Qt4Agg")
+    #matplotlib.use("Qt4Agg")
     plt.ion()
     mgr = plt.get_current_fig_manager()
     mgr.full_screen_toggle() 
