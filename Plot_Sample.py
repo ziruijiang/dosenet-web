@@ -121,15 +121,16 @@ def sum_graph():
     # y = tk.Tk().winfo_screenheight()
 
     plt.ion()
+    mgr = plt.get_current_fig_manager()
+    mgr.full_screen_toggle() 
+    py = mgr.canvas.height()
+    px = mgr.canvas.width()
+    mgr.window.setGeometry(0.1*px, 0.3*py, 640, 545)
     i=1
     while (i<9):
         queue = grab_data(i)
         total = sum_data(queue)
-        mgr = plt.get_current_fig_manager()
-        mgr.full_screen_toggle() 
-        py = mgr.canvas.height()
-        px = mgr.canvas.width()
-        mgr.window.setGeometry(0.1*px, 0.3*py, 640, 545)
+        
         #plt.get_current_fig_manager().window.setGeometry(0.2*x,0.3*y,640,545)
         plt.clf()
         plot_data(total)
@@ -149,16 +150,17 @@ def waterfall_graph():
     # y = tk.Tk().winfo_screenheight()
     
     plt.ion()
+    mgr = plt.get_current_fig_manager()
+    mgr.full_screen_toggle() 
+    py = mgr.canvas.height()
+    px = mgr.canvas.width()
+    mgr.window.setGeometry(0.5*px,0.3*py,640,545)
     i=1
     while (i<9):
         queue = grab_data(i)
         queue_length = len(queue)
         image = make_image(queue)
-        mgr = plt.get_current_fig_manager()
-        mgr.full_screen_toggle() 
-        py = mgr.canvas.height()
-        px = mgr.canvas.width()
-        mgr.window.setGeometry(0.5*px,0.3*py,640,545)
+        
 
         plt.clf()
         i+=1
