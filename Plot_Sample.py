@@ -119,7 +119,7 @@ def sum_graph():
     #matplotlib.use("TkAgg")
     # x = tk.Tk().winfo_screenwidth()
     # y = tk.Tk().winfo_screenheight()
-
+    matplotlib.use("Qt4Agg")
     plt.ion()
     mgr = plt.get_current_fig_manager()
     mgr.full_screen_toggle() 
@@ -148,7 +148,7 @@ def waterfall_graph():
     # matplotlib.use("TkAgg")
     # x = tk.Tk().winfo_screenwidth()
     # y = tk.Tk().winfo_screenheight()
-    
+    matplotlib.use("Qt4Agg")
     plt.ion()
     mgr = plt.get_current_fig_manager()
     mgr.full_screen_toggle() 
