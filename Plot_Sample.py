@@ -5,7 +5,6 @@ import ast
 import numpy as np
 import os
 import matplotlib
-import tkinter as tk
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
