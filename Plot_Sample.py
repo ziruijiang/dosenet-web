@@ -121,12 +121,13 @@ def sum_graph():
     # x = tk.Tk().winfo_screenwidth()
     # y = tk.Tk().winfo_screenheight()
     #matplotlib.use("Qt4Agg")
-    plt.ion()
+    
     mgr = plt.get_current_fig_manager()
     mgr.full_screen_toggle() 
     py = mgr.canvas.height()
     px = mgr.canvas.width()
     mgr.window.setGeometry(0.1*px, 0.3*py, 0.4*px, 0.5*py)
+    plt.ion()
     i=1
     while (i<9):
         queue = grab_data(i)
@@ -150,12 +151,13 @@ def waterfall_graph():
     # x = tk.Tk().winfo_screenwidth()
     # y = tk.Tk().winfo_screenheight()
     #matplotlib.use("Qt4Agg")
-    plt.ion()
+    
     mgr = plt.get_current_fig_manager()
     mgr.full_screen_toggle() 
     py = mgr.canvas.height()
     px = mgr.canvas.width()
     mgr.window.setGeometry(0.5*px,0.3*py, 0.4*px, 0.5*py)
+    plt.ion()
     i=1
     while (i<9):
         queue = grab_data(i)
