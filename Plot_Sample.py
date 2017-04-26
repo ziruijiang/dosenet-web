@@ -5,7 +5,7 @@ import ast
 import numpy as np
 import os
 import matplotlib
-matplotlib.use("Qt5Agg")
+#matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib.collections import PolyCollection
@@ -57,6 +57,7 @@ def plot_data(data):
     """
     Plots data
     """
+
     plt.xlabel('Channel')
     plt.ylabel('Counts')
     x = np.linspace(0, 4096, 256)
@@ -122,22 +123,22 @@ def sum_graph():
     # y = tk.Tk().winfo_screenheight()
     #matplotlib.use("Qt4Agg")
     
-    mgr = plt.get_current_fig_manager()
-    mgr.full_screen_toggle() 
-    py = mgr.canvas.height()
-    px = mgr.canvas.width()
-    mgr.window.setGeometry(0.1*px, 0.3*py, 0.4*px, 0.5*py)
+    # mgr = plt.get_current_fig_manager()
+    # mgr.full_screen_toggle() 
+    # py = mgr.canvas.height()
+    # px = mgr.canvas.width()
+    # mgr.window.setGeometry(0.1*px, 0.3*py, 0.4*px, 0.5*py)
     plt.ion()
     i=1
     while (i<9):
         queue = grab_data(i)
         total = sum_data(queue)
-        
-        #plt.get_current_fig_manager().window.setGeometry(0.2*x,0.3*y,640,545)
         plt.clf()
         plot_data(total)
+        print ('line',i)
         i+=1
         plt.pause(0.7)
+        
     while True:
         plt.pause(0.7)
 
@@ -152,23 +153,25 @@ def waterfall_graph():
     # y = tk.Tk().winfo_screenheight()
     #matplotlib.use("Qt4Agg")
     
-    mgr = plt.get_current_fig_manager()
-    mgr.full_screen_toggle() 
-    py = mgr.canvas.height()
-    px = mgr.canvas.width()
-    mgr.window.setGeometry(0.5*px,0.3*py, 0.4*px, 0.5*py)
+    # mgr = plt.get_current_fig_manager()
+    # mgr.full_screen_toggle() 
+    # py = mgr.canvas.height()
+    # px = mgr.canvas.width()
+    
     plt.ion()
     i=1
     while (i<9):
+        print ('line',i)
         queue = grab_data(i)
         queue_length = len(queue)
         image = make_image(queue)
         
 
         plt.clf()
+
         i+=1
 
-
+        #mgr.window.setGeometry(0.5*px,0.3*py, 0.4*px, 0.5*py)
         plt.imshow(image, interpolation='nearest', aspect='auto', cmap=plt.get_cmap('jet'), extent=[1,4096,queue_length,1])
         plt.xlabel('Bin')
 
