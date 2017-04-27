@@ -16,22 +16,22 @@ from multiprocessing import Process
 
 
 def grab_data(i):
-    """
-    Takes data from datalog and places it in a queue. Rebin data here.
-    """
-    with open('testdata.txt','r') as f:
-        data = f.read()
-    data = ast.literal_eval(data)
-    queue_t= deque('')
-    queue = deque('')
-    line = 0
-    for j in data:
-        new_data = rebin(np.array(j))
-        queue_t.append(new_data)
-    while (line<=i):
-        queue.append(queue_t[line])
-        line+=1
-    return queue
+	"""
+	Takes data from datalog and places it in a queue. Rebin data here.
+	"""
+	with open('testdata.txt','r') as f:
+	    data = f.read()
+	data = ast.literal_eval(data)
+	queue_t= deque('')
+	queue = deque('')
+	line = 0
+	for j in data:
+	    new_data = rebin(np.array(j))
+	    queue_t.append(new_data)
+	while (line<=i):
+	    queue.append(queue_t[line])
+	    line+=1
+	return queue
 
     
 
@@ -39,32 +39,32 @@ def grab_data(i):
 # In[2]:
 
 def sum_data(data):
-    """
-    Sums up the data in the queue
-    """
-    total = data.popleft()
-    i = 1
-    while i < len(data):
-        total += data.popleft()
-        i+=1
-    return total
+	"""
+	Sums up the data in the queue
+	"""
+	total = data.popleft()
+	i = 1
+	while i < len(data):
+	    total += data.popleft()
+	    i+=1
+	return total
 
 
 
 # In[3]:
 
 def plot_data(data):
-    """
-    Plots data
-    """
+	"""
+	Plots data
+	"""
 
-    plt.xlabel('Channel')
-    plt.ylabel('Counts')
-    x = np.linspace(0, 4096, 256)
-    plt.plot(x, data, drawstyle='steps-mid')
-   
-    #plt.show()
-    plt.pause(0.6)
+	plt.xlabel('Channel')
+	plt.ylabel('Counts')
+	x = np.linspace(0, 4096, 256)
+	plt.plot(x, data, drawstyle='steps-mid')
+
+	#plt.show()
+	plt.pause(0.6)
 
 
 
@@ -72,16 +72,16 @@ def rebin(data, n=4):
     """
     Rebins the array. n is the divisor. Rebin the data in the grab_data method. 
     """
-    a = len(data)/n
-    new_data = np.zeros((256, 1))
-    i = 0 
-    count = 0
-    while i < a:
-        temp = sum(data[i:n*(count+1)])
-        new_data[count] = temp
-        count+=1
-        i+=n
-    return new_data
+	a = len(data)/n
+	new_data = np.zeros((256, 1))
+	i = 0 
+	count = 0
+	while i < a:
+	    temp = sum(data[i:n*(count+1)])
+	    new_data[count] = temp
+	    count+=1
+	    i+=n
+	return new_data
 
 
 
@@ -171,7 +171,7 @@ def waterfall_graph():
 
         i+=1
 
-        #mgr.window.setGeometry(0.5*px,0.3*py, 0.4*px, 0.5*py)
+        mgr.window.setGeometry(0.5*px,0.3*py, 0.4*px, 0.5*py)
         plt.imshow(image, interpolation='nearest', aspect='auto', cmap=plt.get_cmap('jet'), extent=[1,4096,queue_length,1])
         plt.xlabel('Bin')
 
